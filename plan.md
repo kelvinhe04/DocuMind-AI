@@ -256,7 +256,7 @@ POPPLER_PATH=C:\poppler\Library\bin
 
 ---
 
-## FASE 0 — Setup inicial · ⏱️ ~3-4 h
+## FASE 0 ✅ COMPLETADA — Setup inicial · ⏱️ ~3-4 h
 
 **Objetivo:** Dejar listos ambos entornos (Next.js + FastAPI), dependencias del sistema (Tesseract, Poppler) y las cuentas externas (Clerk, Stripe, Groq), con "hello world" corriendo en ambos puertos.
 
@@ -330,7 +330,7 @@ mkdir -p api core services models scripts data/uploads data/chroma data/demo
 
 ---
 
-## FASE 1 — Backend core: RAG + OCR + 4 endpoints · ⏱️ ~8-10 h
+## FASE 1 ✅ COMPLETADA — Backend core: RAG + OCR + 4 endpoints · ⏱️ ~8-10 h
 
 **Objetivo:** Pipeline RAG completo con OCR y los 4 endpoints funcionando, verificables desde Swagger (`/docs`).
 
@@ -530,7 +530,7 @@ app.include_router(metrics.router)
 
 ---
 
-## FASE 2 — Frontend base + Auth (Clerk) · ⏱️ ~5-6 h
+## FASE 2 ✅ COMPLETADA — Frontend base + Auth (Clerk) · ⏱️ ~5-6 h
 
 **Objetivo:** App Router con ClerkProvider, middleware protegiendo rutas, layouts (landing shell + app shell con Sidebar/Topbar), y `lib`/`hooks` base.
 
@@ -577,7 +577,7 @@ export type PlanId = keyof typeof PLANS;
 
 ---
 
-## FASE 3 — Landing page futurista · ⏱️ ~6-7 h
+## FASE 3 ✅ COMPLETADA — Landing page futurista · ⏱️ ~6-7 h
 
 **Objetivo:** Landing tipo SaaS (Vercel/Linear) en `/`, con todas las secciones del v4 §G, responsive y animada (Framer Motion).
 
@@ -593,7 +593,7 @@ Navbar (transparente→sólido al scroll), Hero (badge "Ahora con OCR", H1 "El c
 
 ---
 
-## FASE 4 — App autenticada + Integración con backend · ⏱️ ~10-12 h
+## FASE 4 ✅ COMPLETADA — App autenticada + Integración con backend · ⏱️ ~10-12 h
 
 **Objetivo:** Las 6 páginas de la app consumiendo FastAPI vía el proxy de Next.js.
 
@@ -642,7 +642,7 @@ export { handler as GET, handler as POST };
 
 ---
 
-## FASE 5 — Pagos (Stripe) + Gating Free vs Pago · ⏱️ ~6-7 h
+## FASE 5 ✅ COMPLETADA — Pagos (Stripe) + Gating Free vs Pago · ⏱️ ~6-7 h
 
 **Objetivo:** El momento estrella del demo: usuario Free topa límites → paga con Stripe (test) → plan sube a Starter → se desbloquean OCR/imágenes y documentos ilimitados, **en vivo, sin webhooks/ngrok**.
 
@@ -704,7 +704,7 @@ export async function POST(req: NextRequest) {
 
 ---
 
-## FASE 6 — Polish y robustez · ⏱️ ~5-6 h
+## FASE 6 ✅ COMPLETADA — Polish y robustez · ⏱️ ~5-6 h
 
 **Objetivo:** Demo a prueba de fallos.
 - Estados de carga (skeletons) y vacíos en todas las páginas.
