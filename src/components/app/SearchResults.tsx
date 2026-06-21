@@ -48,7 +48,7 @@ export function SearchResults() {
   };
 
   return (
-    <div className="space-y-4 max-w-3xl">
+    <div className="space-y-4 w-full">
       <h2 className="font-heading text-2xl font-semibold">Búsqueda semántica</h2>
       <p className="text-sm text-muted-foreground">
         Encuentra los fragmentos más relevantes en tus documentos sin necesidad de coincidencia exacta.

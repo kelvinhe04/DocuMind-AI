@@ -3,9 +3,7 @@
 import { AppShell } from "@/components/app/AppShell";
 import { usePlan } from "@/hooks/usePlan";
 import { PLANS } from "@/lib/plans";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { CheckCircle2, Zap, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -83,20 +81,22 @@ export default function PricingPage() {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 pt-5">
           {Object.values(PLANS).map((p) => {
             const isCurrent = isLoaded && p.id === planId;
             const isRecommended = p.id === "starter";
             const isLoadingThis = loading === p.id;
 
             return (
-              <Card
+              <div
                 key={p.id}
-                className={`relative flex flex-col ${
+                className={`relative flex flex-col rounded-2xl border bg-slate-900/80 transition-colors ${
                   isRecommended
                     ? "border-violet-500 ring-2 ring-violet-500/20 shadow-lg shadow-violet-500/10"
-                    : ""
-                } ${isCurrent ? "border-emerald-500/50" : ""}`}
+                    : isCurrent
+                    ? "border-emerald-500/40"
+                    : "border-slate-800/60 hover:border-slate-700/60"
+                }`}
               >
                 {isRecommended && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
@@ -104,31 +104,31 @@ export default function PricingPage() {
                   </div>
                 )}
 
-                <CardHeader className="pb-3 pt-6">
-                  <CardTitle className="flex items-center justify-between text-base">
+                <div className="px-5 pb-3 pt-6">
+                  <div className="flex items-center justify-between text-base font-semibold text-white">
                     <span>{p.name}</span>
                     {isCurrent && (
-                      <Badge variant="outline" className="text-xs border-emerald-500/50 text-emerald-600 dark:text-emerald-400">
+                      <Badge variant="outline" className="text-xs border-emerald-500/50 text-emerald-400">
                         Actual
                       </Badge>
                     )}
-                  </CardTitle>
-                  <div className="mt-2">
+                  </div>
+                  <div className="mt-3">
                     {p.price === 0 ? (
-                      <span className="text-3xl font-bold">Gratis</span>
+                      <span className="text-3xl font-bold text-white">Gratis</span>
                     ) : (
                       <div className="flex items-end gap-1">
-                        <span className="text-3xl font-bold">${p.price}</span>
-                        <span className="text-sm text-muted-foreground pb-0.5">/mes</span>
+                        <span className="text-3xl font-bold text-white">${p.price}</span>
+                        <span className="text-sm text-slate-400 pb-0.5">/mes</span>
                       </div>
                     )}
                   </div>
-                </CardHeader>
+                </div>
 
-                <CardContent className="flex flex-1 flex-col space-y-4">
+                <div className="flex flex-1 flex-col gap-4 px-5 pb-5">
                   <ul className="flex-1 space-y-2">
                     {(FEATURES[p.id] ?? []).map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <li key={f} className="flex items-start gap-2 text-xs text-slate-400">
                         <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0 mt-0.5" />
                         {f}
                       </li>
@@ -136,43 +136,35 @@ export default function PricingPage() {
                   </ul>
 
                   {p.price === 0 ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full"
+                    <button
                       disabled
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800/50 py-2 text-sm text-slate-500 cursor-not-allowed"
                     >
                       {isCurrent ? "Plan actual" : "Gratis para siempre"}
-                    </Button>
+                    </button>
                   ) : (
-                    <Button
-                      size="sm"
-                      className={`w-full ${isRecommended ? "bg-violet-600 hover:bg-violet-700" : ""}`}
+                    <button
                       disabled={isCurrent || isLoadingThis}
                       onClick={() => checkout(p.id)}
+                      className={`w-full rounded-xl py-2 text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${
+                        isCurrent
+                          ? "border border-slate-700 bg-slate-800/50 text-slate-500"
+                          : "bg-violet-600 hover:bg-violet-500 text-white"
+                      }`}
                     >
                       {isLoadingThis ? (
-                        <><Loader2 className="size-3.5 mr-2 animate-spin" />Redirigiendo…</>
+                        <><Loader2 className="size-3.5 animate-spin" />Redirigiendo…</>
                       ) : isCurrent ? (
                         "Plan actual"
                       ) : (
-                        <><Zap className="size-3.5 mr-1.5" />Elegir {p.name}</>
+                        <><Zap className="size-3.5" />Elegir {p.name}</>
                       )}
-                    </Button>
+                    </button>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
-        </div>
-
-        <div className="rounded-lg border border-muted bg-muted/30 px-4 py-3 text-center text-xs text-muted-foreground space-y-1">
-          <p>
-            Modo test de Stripe — usa la tarjeta{" "}
-            <span className="font-mono font-semibold text-foreground">4242 4242 4242 4242</span>,
-            fecha futura y CVC cualquiera.
-          </p>
-          <p>No se realizan cargos reales. Los pagos son simulados.</p>
         </div>
       </div>
     </AppShell>

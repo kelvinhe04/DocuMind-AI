@@ -4,7 +4,9 @@ import { SearchResults } from "@/components/app/SearchResults";
 export default function SearchPage() {
   return (
     <AppShell>
-      <SearchResults />
+      <div className="w-full max-w-3xl mx-auto">
+        <SearchResults />
+      </div>
     </AppShell>
   );
 }

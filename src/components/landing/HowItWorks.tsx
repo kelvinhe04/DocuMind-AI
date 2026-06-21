@@ -50,7 +50,6 @@ export function HowItWorks() {
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 relative">
-          <div className="hidden md:block absolute top-16 left-1/3 right-1/3 h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
 
           {steps.map((step, i) => {
             const Icon = step.icon;

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import { Menu, Brain } from "lucide-react";
+import { clerkDarkAppearance } from "@/lib/clerkAppearance";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ export function Topbar() {
   const allNav = [...APP_NAV, ...APP_NAV_BOTTOM];
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b bg-card px-4">
+    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-slate-800/60 bg-slate-900/95 px-4">
       <Sheet>
         <SheetTrigger
           render={
@@ -52,8 +53,8 @@ export function Topbar() {
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                     pathname.startsWith(item.href)
-                      ? "bg-violet-500/10 text-violet-600"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                      ? "bg-violet-500/15 text-violet-300"
+                      : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200",
                   )}
                 >
                   <Icon className="size-4" />
@@ -65,11 +66,11 @@ export function Topbar() {
         </SheetContent>
       </Sheet>
 
-      <h1 className="font-heading text-base font-semibold">{title}</h1>
+      <h1 className="font-heading text-base font-semibold text-white">{title}</h1>
 
       <div className="ml-auto flex items-center gap-3">
         <PlanBadge />
-        <UserButton />
+        <UserButton appearance={clerkDarkAppearance} />
       </div>
     </header>
   );

@@ -14,10 +14,10 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
     <Link
       href={item.href}
       className={cn(
-        "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
         active
-          ? "bg-violet-500/10 text-violet-600 dark:text-violet-400"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+          ? "bg-violet-500/15 text-violet-300 shadow-[0_0_0_1px_rgba(139,92,246,0.2)]"
+          : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200",
       )}
     >
       <Icon className="size-4" />
@@ -31,21 +31,23 @@ export function Sidebar() {
   const isActive = (href: string) => pathname.startsWith(href);
 
   return (
-    <aside className="hidden w-64 shrink-0 flex-col border-r bg-card md:flex">
-      <div className="flex h-14 items-center gap-2 border-b px-4">
-        <Brain className="size-6 text-violet-500" />
-        <span className="font-heading text-lg font-semibold">DocuMind AI</span>
+    <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-800/60 bg-slate-900/95 md:flex">
+      <div className="flex h-14 items-center gap-2 border-b border-slate-800/60 px-4">
+        <div className="flex size-7 items-center justify-center rounded-lg bg-violet-600/20">
+          <Brain className="size-4 text-violet-400" />
+        </div>
+        <span className="font-heading text-base font-semibold text-white">DocuMind AI</span>
       </div>
-      <nav className="flex flex-1 flex-col gap-1 p-3">
+      <nav className="flex flex-1 flex-col gap-0.5 p-3">
         {APP_NAV.map((item) => (
           <NavLink key={item.href} item={item} active={isActive(item.href)} />
         ))}
-        <div className="my-2 border-t" />
+        <div className="my-2 border-t border-slate-800/60" />
         {APP_NAV_BOTTOM.map((item) => (
           <NavLink key={item.href} item={item} active={isActive(item.href)} />
         ))}
       </nav>
-      <div className="flex items-center justify-between border-t px-4 py-3 text-sm text-muted-foreground">
+      <div className="flex items-center justify-between border-t border-slate-800/60 px-4 py-3 text-sm text-slate-500">
         <span>Plan actual</span>
         <PlanBadge />
       </div>

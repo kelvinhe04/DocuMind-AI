@@ -86,48 +86,269 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  /* slate-950 palette — matches landing page dark theme */
+  --background: oklch(0.09 0.015 262);
+  --foreground: oklch(0.94 0.006 262);
+  --card: oklch(0.13 0.015 262);
+  --card-foreground: oklch(0.92 0.006 262);
+  --popover: oklch(0.13 0.015 262);
+  --popover-foreground: oklch(0.92 0.006 262);
+  --primary: oklch(0.68 0.22 268);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.19 0.015 262);
+  --secondary-foreground: oklch(0.85 0.006 262);
+  --muted: oklch(0.19 0.015 262);
+  --muted-foreground: oklch(0.60 0.010 262);
+  --accent: oklch(0.19 0.015 262);
+  --accent-foreground: oklch(0.92 0.006 262);
+  --destructive: oklch(0.65 0.20 22);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.68 0.22 268);
+  --chart-1: oklch(0.62 0.24 264);
+  --chart-2: oklch(0.70 0.17 162);
+  --chart-3: oklch(0.77 0.19 70);
+  --chart-4: oklch(0.63 0.27 304);
+  --chart-5: oklch(0.65 0.25 16);
+  --sidebar: oklch(0.13 0.015 262);
+  --sidebar-foreground: oklch(0.92 0.006 262);
+  --sidebar-primary: oklch(0.68 0.22 268);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-accent: oklch(0.19 0.015 262);
+  --sidebar-accent-foreground: oklch(0.92 0.006 262);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.68 0.22 268);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(51 65 85 / 0.8) transparent;
   }
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Webkit scrollbar — Chrome, Edge, Safari */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #020617;
+    border-radius: 99px;
+    margin: 4px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 99px;
+    border: 2px solid rgb(15 23 42 / 0.4);
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+    border: 2px solid rgb(15 23 42 / 0.4);
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
 }
+
+/* ── Clerk overrides ──────────────────────────────────────────────────────── */
+
+/* Hide "Development mode" footer */
+.cl-userButtonPopoverFooter,
+.cl-internal-b3fm6y {
+  display: none !important;
+}
+
+/* Popover card */
+.cl-userButtonPopoverCard {
+  background: #0f172a !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.6) !important;
+  overflow: hidden !important;
+  min-width: 260px !important;
+}
+
+/* User header block */
+.cl-userPreview {
+  background: rgba(30,41,59,0.6) !important;
+  border-radius: 0.75rem !important;
+  margin: 6px 6px 2px 6px !important;
+  padding: 12px !important;
+}
+
+/* Name */
+.cl-userPreviewMainIdentifier {
+  color: #f1f5f9 !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Email */
+.cl-userPreviewSecondaryIdentifier {
+  color: #94a3b8 !important;
+  font-size: 0.75rem !important;
+}
+
+/* Action buttons */
+.cl-userButtonPopoverActionButton {
+  border-radius: 0.75rem !important;
+  margin: 2px 6px !important;
+  color: #cbd5e1 !important;
+  transition: background 0.15s, color 0.15s !important;
+}
+.cl-userButtonPopoverActionButton:hover {
+  background: rgba(51,65,85,0.7) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Action icons */
+.cl-userButtonPopoverActionButtonIcon {
+  color: #64748b !important;
+}
+
+/* Avatar ring */
+.cl-avatarBox {
+  box-shadow: 0 0 0 2px rgba(139,92,246,0.3) !important;
+}
+
+/* Separator between actions */
+.cl-userButtonPopoverActions {
+  padding: 4px 0 6px 0 !important;
+}
+
+/* Sign-in card */
+.cl-card {
+  background: rgba(15,23,42,0.95) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 1.25rem !important;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(139,92,246,0.05) !important;
+}
+
+/* Header title inside card */
+.cl-headerTitle {
+  color: #f8fafc !important;
+  font-weight: 700 !important;
+  font-size: 1.25rem !important;
+}
+.cl-headerSubtitle {
+  color: #64748b !important;
+}
+
+/* Form field labels */
+.cl-formFieldLabel {
+  color: #94a3b8 !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+}
+
+/* Sign-in inputs */
+.cl-formFieldInput {
+  background: #1e293b !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #f1f5f9 !important;
+  border-radius: 0.75rem !important;
+}
+.cl-formFieldInput::placeholder {
+  color: #475569 !important;
+}
+.cl-formFieldInput:focus {
+  border-color: rgba(139,92,246,0.5) !important;
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.12) !important;
+  outline: none !important;
+}
+
+/* Sign-in primary button */
+.cl-formButtonPrimary {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 15px rgba(124,58,237,0.4) !important;
+  transition: all 0.2s !important;
+}
+.cl-formButtonPrimary:hover {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+  box-shadow: 0 6px 20px rgba(124,58,237,0.5) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Sign-in social buttons */
+.cl-socialButtonsBlockButton {
+  background: rgba(30,41,59,0.8) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  border-radius: 0.75rem !important;
+  color: #e2e8f0 !important;
+  transition: background 0.15s, border-color 0.15s !important;
+}
+.cl-socialButtonsBlockButton:hover {
+  background: rgba(51,65,85,0.8) !important;
+  border-color: rgba(255,255,255,0.15) !important;
+}
+.cl-socialButtonsBlockButtonText {
+  color: #e2e8f0 !important;
+  font-weight: 500 !important;
+}
+
+/* "Last used" badge — force white text over violet pill */
+.cl-badge {
+  background: #7c3aed !important;
+  border: none !important;
+  border-radius: 99px !important;
+  padding: 2px 8px !important;
+  font-size: 0.6rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  box-shadow: 0 2px 8px rgba(124,58,237,0.5) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+.cl-badge * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+/* Target by localization key if class fails */
+[data-localization-key="badge__lastUsed"] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: #7c3aed !important;
+  border-radius: 99px !important;
+  padding: 2px 8px !important;
+}
+
+/* Divider */
+.cl-dividerLine {
+  background: rgba(255,255,255,0.07) !important;
+}
+.cl-dividerText {
+  color: #475569 !important;
+}
+
+/* Footer links */
+.cl-footerActionText {
+  color: #475569 !important;
+}
+.cl-footerActionLink {
+  color: #a78bfa !important;
+  font-weight: 500 !important;
+}
+.cl-footerActionLink:hover {
+  color: #c4b5fd !important;
+}
+
+/* Hide Clerk footer branding */
+.cl-footer {
+  display: none !important;
+}
+
+/* ── / Clerk overrides ────────────────────────────────────────────────────── */
 
 .dot-grid {
   background-image: radial-gradient(circle, rgb(148 163 184 / 0.18) 1px, transparent 1px);

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, User, Brain } from "lucide-react";
 import Link from "next/link";
 
 const fadeUp = {
@@ -103,20 +103,22 @@ export function Hero() {
               </div>
 
               <div className="space-y-3">
-                <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs text-slate-300">K</span>
-                  </div>
-                  <div className="bg-slate-800/80 rounded-xl rounded-tl-none px-4 py-2.5 text-sm text-slate-300 max-w-xs">
+                {/* Usuario — derecha */}
+                <div className="flex items-end justify-end gap-2">
+                  <div className="bg-slate-800/80 rounded-xl rounded-br-none px-4 py-2.5 text-sm text-slate-300 max-w-xs">
                     ¿Cuántos días de preaviso exige el contrato?
+                  </div>
+                  <div className="w-7 h-7 rounded-full bg-slate-600 flex items-center justify-center flex-shrink-0">
+                    <User className="w-3.5 h-3.5 text-white" />
                   </div>
                 </div>
 
-                <div className="flex gap-3 flex-row-reverse">
+                {/* Bot — izquierda */}
+                <div className="flex items-end gap-2">
                   <div className="w-7 h-7 rounded-full bg-violet-700 flex items-center justify-center flex-shrink-0">
                     <Brain className="w-3.5 h-3.5 text-white" />
                   </div>
-                  <div className="bg-violet-900/50 border border-violet-700/30 rounded-xl rounded-tr-none px-4 py-2.5 text-sm text-slate-200 max-w-xs">
+                  <div className="bg-violet-900/50 border border-violet-700/30 rounded-xl rounded-bl-none px-4 py-2.5 text-sm text-slate-200 max-w-xs">
                     El contrato establece un preaviso de{" "}
                     <span className="text-violet-300 font-semibold">30 días</span> para terminación
                     sin causa justificada.{" "}
@@ -126,16 +128,18 @@ export function Hero() {
                   </div>
                 </div>
 
-                <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs text-slate-300">K</span>
-                  </div>
-                  <div className="bg-slate-800/80 rounded-xl rounded-tl-none px-4 py-2.5 text-sm text-slate-300 max-w-xs">
+                {/* Usuario — derecha */}
+                <div className="flex items-end justify-end gap-2">
+                  <div className="bg-slate-800/80 rounded-xl rounded-br-none px-4 py-2.5 text-sm text-slate-300 max-w-xs">
                     ¿Cuántas cotizaciones pide política de compras?
+                  </div>
+                  <div className="w-7 h-7 rounded-full bg-slate-600 flex items-center justify-center flex-shrink-0">
+                    <User className="w-3.5 h-3.5 text-white" />
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-slate-500 pl-10">
+                {/* Typing indicator — izquierda */}
+                <div className="flex items-center gap-2 text-xs text-slate-500 pl-9">
                   <Zap className="w-3 h-3 text-violet-400 animate-pulse" />
                   DocuMind está escribiendo...
                 </div>
@@ -167,14 +171,3 @@ export function Hero() {
   );
 }
 
-function Brain({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 001.5 2.122 6.003 6.003 0 003 5.25M9.75 3.104a24.301 24.301 0 00-4.5.082M5 14.5a6.003 6.003 0 003 5.25m0 0a6.003 6.003 0 006 0m-6 0v2.25m6-2.25v2.25m0 0a6.003 6.003 0 003-5.25M14.25 8.82a2.25 2.25 0 001.5-2.122V3.186"
-      />
-    </svg>
-  );
-}

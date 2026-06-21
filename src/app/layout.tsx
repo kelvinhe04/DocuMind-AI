@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="es" suppressHydrationWarning>
+      <html lang="es" className="dark" suppressHydrationWarning>
         <body className={cn(inter.variable, "font-sans antialiased")}>
           <TooltipProvider delay={200}>{children}</TooltipProvider>
           <Toaster richColors position="top-right" />

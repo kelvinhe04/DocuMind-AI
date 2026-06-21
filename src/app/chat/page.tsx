@@ -4,8 +4,7 @@ import { ChatInterface } from "@/components/app/ChatInterface";
 export default function ChatPage() {
   return (
     <AppShell>
-      {/* h-full so ChatInterface can fill the available space and scroll internally */}
-      <div className="h-full">
+      <div className="flex-1 flex flex-col w-full max-w-3xl mx-auto min-h-0">
         <ChatInterface />
       </div>
     </AppShell>

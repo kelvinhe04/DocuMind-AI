@@ -19,15 +19,21 @@ def _preprocess(img: "Image.Image") -> "Image.Image":
 
 
 def _ocr_image(img: "Image.Image") -> tuple[str, float]:
-    data = pytesseract.image_to_data(
-        _preprocess(img), lang=settings.ocr_lang,
-        output_type=pytesseract.Output.DICT,
-    )
-    words = [w for w in data["text"] if w and w.strip()]
-    confs = [int(c) for c in data["conf"] if str(c) not in ("-1", "")]
-    text = " ".join(words)
-    conf = round(sum(confs) / len(confs), 1) if confs else 0.0
-    return text, conf
+    # Intenta con el idioma configurado; si falla, cae a inglés
+    for lang in (settings.ocr_lang, "spa+eng", "eng"):
+        try:
+            data = pytesseract.image_to_data(
+                _preprocess(img), lang=lang,
+                output_type=pytesseract.Output.DICT,
+            )
+            words = [w for w in data["text"] if w and w.strip()]
+            confs = [int(c) for c in data["conf"] if str(c) not in ("-1", "")]
+            text = " ".join(words)
+            conf = round(sum(confs) / len(confs), 1) if confs else 0.0
+            return text, conf
+        except pytesseract.TesseractError:
+            continue
+    return "", 0.0
 
 
 def extract(path: str, ext: str) -> tuple[list[dict], str, Optional[float]]:
@@ -53,10 +59,15 @@ def extract(path: str, ext: str) -> tuple[list[dict], str, Optional[float]]:
 
         # PDF escaneado -> OCR por página
         doc.close()
-        images = convert_from_path(
-            path, dpi=settings.ocr_dpi,
-            poppler_path=settings.poppler_path or None,
-        )
+        try:
+            images = convert_from_path(
+                path, dpi=settings.ocr_dpi,
+                poppler_path=settings.poppler_path or None,
+            )
+        except Exception:
+            # Poppler no disponible: devolver páginas sin texto
+            return [{"page": 1, "text": ""}], "pdf_ocr", 0.0
+
         ocr_pages, confs = [], []
         for i, img in enumerate(images, start=1):
             text, conf = _ocr_image(img)
