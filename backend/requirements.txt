@@ -1,0 +1,28 @@
+# DocuMind AI — Backend (FastAPI) dependencies
+# Embeddings: ChromaDB default ONNX all-MiniLM-L6-v2 (sin PyTorch)
+
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-dotenv
+python-multipart
+
+# RAG / Vector
+langchain-text-splitters
+chromadb
+
+# LLM
+groq
+
+# Extracción de documentos + OCR
+pymupdf
+pdf2image
+pytesseract
+Pillow
+numpy
+
+# Generación de entregables y documentos demo
+reportlab
+python-docx
+python-pptx
