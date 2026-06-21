@@ -36,6 +36,7 @@ class ChatRequest(BaseModel):
     mode: Literal["chat", "search"] = "chat"
     top_k: Optional[int] = None
     filter_doc: Optional[str] = None
+    chat_id: Optional[str] = None
 
 
 class Source(BaseModel):

@@ -17,9 +17,11 @@ def add_chunks(ids: list[str], texts: list[str], metadatas: list[dict]) -> None:
     _collection.add(ids=ids, documents=texts, metadatas=metadatas)
 
 
-def query(text: str, k: int, filter_doc: Optional[str] = None) -> list[dict]:
-    where = {"filename": filter_doc} if filter_doc else None
-    res = _collection.query(query_texts=[text], n_results=k, where=where)
+def delete_chunks_by_document(document_id: str) -> None:
+    _collection.delete(where={"document_id": document_id})
+
+
+def _format_results(res: dict) -> list[dict]:
     docs = res.get("documents", [[]])[0]
     metas = res.get("metadatas", [[]])[0]
     dists = res.get("distances", [[]])[0]
@@ -35,5 +37,52 @@ def query(text: str, k: int, filter_doc: Optional[str] = None) -> list[dict]:
     return out
 
 
-def count_chunks() -> int:
-    return _collection.count()
+def query(text: str, k: int, filter_doc: Optional[str] = None,
+          user_id: Optional[str] = None) -> list[dict]:
+    # Build where clause. Legacy chunks (indexed before user_id) have no user_id
+    # in their metadata, so we use $in to match both the user's chunks and legacy ones.
+    conditions: list[dict] = []
+    if user_id:
+        conditions.append({"user_id": {"$in": [user_id, ""]}})
+    if filter_doc:
+        conditions.append({"filename": filter_doc})
+
+    if len(conditions) == 0:
+        where = None
+    elif len(conditions) == 1:
+        where = conditions[0]
+    else:
+        where = {"$and": conditions}
+
+    try:
+        res = _collection.query(query_texts=[text], n_results=k, where=where)
+        results = _format_results(res)
+    except Exception:
+        results = []
+
+    # Fallback: if user_id filter found nothing, search without it (covers chunks
+    # indexed before the user_id field existed, which have no user_id key at all).
+    if not results and user_id:
+        where_fallback = {"filename": filter_doc} if filter_doc else None
+        try:
+            res = _collection.query(query_texts=[text], n_results=k, where=where_fallback)
+            results = _format_results(res)
+        except Exception:
+            pass
+
+    return results
+
+
+def count_chunks(user_id: Optional[str] = None) -> int:
+    if not user_id:
+        return _collection.count()
+    try:
+        # Include user's chunks and legacy chunks (user_id="") that predate isolation
+        res = _collection.get(where={"user_id": {"$in": [user_id, ""]}})
+        count = len(res.get("ids", []))
+        if count > 0:
+            return count
+        # Fallback: chunks without user_id key at all (very old data)
+        return _collection.count()
+    except Exception:
+        return _collection.count()

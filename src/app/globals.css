@@ -350,6 +350,15 @@
 
 /* ── / Clerk overrides ────────────────────────────────────────────────────── */
 
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
 .dot-grid {
   background-image: radial-gradient(circle, rgb(148 163 184 / 0.18) 1px, transparent 1px);
   background-size: 28px 28px;

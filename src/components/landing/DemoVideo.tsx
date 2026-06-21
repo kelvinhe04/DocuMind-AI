@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Play, FileText, MessageSquare, Search, BarChart3 } from "lucide-react";
+import { Play, FileText, MessageSquare, Search, CreditCard, BarChart3 } from "lucide-react";
 
 export function DemoVideo() {
   const [playing, setPlaying] = useState(false);
@@ -93,16 +93,17 @@ export function DemoVideo() {
           className="mt-8 flex flex-wrap justify-center gap-3"
         >
           {[
-            "📄 Subida con OCR",
-            "💬 Chat con citas",
-            "🔍 Búsqueda semántica",
-            "💳 Pago Stripe en vivo",
-          ].map((tag) => (
+            { icon: FileText, label: "Subida con OCR" },
+            { icon: MessageSquare, label: "Chat con citas" },
+            { icon: Search, label: "Búsqueda semántica" },
+            { icon: CreditCard, label: "Pago Stripe en vivo" },
+          ].map(({ icon: Icon, label }) => (
             <span
-              key={tag}
-              className="text-xs bg-slate-800/80 border border-white/5 text-slate-400 px-4 py-2 rounded-full"
+              key={label}
+              className="flex items-center gap-1.5 text-xs bg-slate-800/80 border border-white/5 text-slate-400 px-4 py-2 rounded-full"
             >
-              {tag}
+              <Icon className="size-3.5" />
+              {label}
             </span>
           ))}
         </motion.div>

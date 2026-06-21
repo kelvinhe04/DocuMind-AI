@@ -34,7 +34,9 @@ async function handler(
     }
 
     if (plan.maxDocs !== Infinity) {
-      const listRes = await fetch(`${FASTAPI}/documents`);
+      const listRes = await fetch(`${FASTAPI}/documents`, {
+        headers: { "x-user-id": userId },
+      });
       if (listRes.ok) {
         const data = await listRes.json();
         const count: number = data?.documents?.length ?? 0;
@@ -56,18 +58,24 @@ async function handler(
   const isGetOrHead = req.method === "GET" || req.method === "HEAD";
   const body = isGetOrHead ? undefined : await req.blob();
 
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = {
+    "x-user-id": userId,
+  };
   const ct = req.headers.get("content-type");
   if (ct) headers["content-type"] = ct;
 
   const upstream = await fetch(url, { method: req.method, body, headers });
 
+  const resHeaders: Record<string, string> = {
+    "content-type": upstream.headers.get("content-type") ?? "application/json",
+  };
+  const cd = upstream.headers.get("content-disposition");
+  if (cd) resHeaders["content-disposition"] = cd;
+
   return new NextResponse(upstream.body, {
     status: upstream.status,
-    headers: {
-      "content-type": upstream.headers.get("content-type") ?? "application/json",
-    },
+    headers: resHeaders,
   });
 }
 
-export { handler as GET, handler as POST, handler as PUT, handler as DELETE };
+export { handler as GET, handler as POST, handler as PUT, handler as PATCH, handler as DELETE };

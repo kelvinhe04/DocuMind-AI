@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
 
 const links = [
   { href: "#features", label: "Características" },
@@ -13,6 +14,7 @@ const links = [
 ];
 
 export function Navbar() {
+  const { isSignedIn } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -51,18 +53,29 @@ export function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/sign-in"
-            className="text-sm text-slate-300 hover:text-white transition-colors px-4 py-2"
-          >
-            Iniciar sesión
-          </Link>
-          <Link
-            href="/sign-up"
-            className="text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-white px-5 py-2 rounded-lg transition-colors"
-          >
-            Comenzar gratis
-          </Link>
+          {isSignedIn ? (
+            <Link
+              href="/dashboard"
+              className="text-sm font-semibold bg-violet-600 hover:bg-violet-500 text-white px-5 py-2 rounded-lg transition-colors"
+            >
+              Abrir app →
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/sign-in"
+                className="text-sm text-slate-300 hover:text-white transition-colors px-4 py-2"
+              >
+                Iniciar sesión
+              </Link>
+              <Link
+                href="/sign-up"
+                className="text-sm font-semibold bg-emerald-500 hover:bg-emerald-400 text-white px-5 py-2 rounded-lg transition-colors"
+              >
+                Comenzar gratis
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -94,18 +107,30 @@ export function Navbar() {
                 </a>
               ))}
               <div className="pt-2 flex flex-col gap-2">
-                <Link
-                  href="/sign-in"
-                  className="text-sm text-center text-slate-300 hover:text-white py-2 border border-white/10 rounded-lg transition-colors"
-                >
-                  Iniciar sesión
-                </Link>
-                <Link
-                  href="/sign-up"
-                  className="text-sm font-semibold text-center bg-emerald-500 hover:bg-emerald-400 text-white py-2 rounded-lg transition-colors"
-                >
-                  Comenzar gratis
-                </Link>
+                {isSignedIn ? (
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setOpen(false)}
+                    className="text-sm font-semibold text-center bg-violet-600 hover:bg-violet-500 text-white py-2 rounded-lg transition-colors"
+                  >
+                    Abrir app →
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      href="/sign-in"
+                      className="text-sm text-center text-slate-300 hover:text-white py-2 border border-white/10 rounded-lg transition-colors"
+                    >
+                      Iniciar sesión
+                    </Link>
+                    <Link
+                      href="/sign-up"
+                      className="text-sm font-semibold text-center bg-emerald-500 hover:bg-emerald-400 text-white py-2 rounded-lg transition-colors"
+                    >
+                      Comenzar gratis
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>

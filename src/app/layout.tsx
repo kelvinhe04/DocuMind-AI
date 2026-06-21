@@ -9,9 +9,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "DocuMind AI — El cerebro digital de tu empresa",
+  title: "DocuMind AI",
   description:
     "Convierte PDFs, imágenes y documentos en conocimiento accionable con IA: búsqueda semántica y chat con citas exactas.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({

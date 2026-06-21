@@ -13,7 +13,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import chat, documents, metrics
+from api import chat, chats, documents, metrics
 from core.database import init_db, count_documents
 
 logger = logging.getLogger("documind")
@@ -71,4 +71,5 @@ def health():
 
 app.include_router(documents.router, tags=["documents"])
 app.include_router(chat.router, tags=["chat"])
+app.include_router(chats.router, tags=["chats"])
 app.include_router(metrics.router, tags=["metrics"])

@@ -3,8 +3,8 @@ import { ChatInterface } from "@/components/app/ChatInterface";
 
 export default function ChatPage() {
   return (
-    <AppShell>
-      <div className="flex-1 flex flex-col w-full max-w-3xl mx-auto min-h-0">
+    <AppShell noPadding>
+      <div className="flex flex-1 min-h-0 h-full">
         <ChatInterface />
       </div>
     </AppShell>

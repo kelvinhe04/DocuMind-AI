@@ -22,7 +22,11 @@ export function useMetrics() {
     }
   }, []);
 
-  useEffect(() => { fetch(); }, [fetch]);
+  useEffect(() => {
+    fetch();
+    const id = setInterval(fetch, 30_000);
+    return () => clearInterval(id);
+  }, [fetch]);
 
   return { metrics, loading, error, refresh: fetch };
 }

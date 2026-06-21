@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
-import { Menu, Brain } from "lucide-react";
+import { Menu, Brain, Home } from "lucide-react";
 import { clerkDarkAppearance } from "@/lib/clerkAppearance";
 
 import { cn } from "@/lib/utils";
@@ -70,6 +70,14 @@ export function Topbar() {
 
       <div className="ml-auto flex items-center gap-3">
         <PlanBadge />
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+          title="Ir a la landing"
+        >
+          <Home className="size-4" />
+          <span className="hidden sm:block">Inicio</span>
+        </Link>
         <UserButton appearance={clerkDarkAppearance} />
       </div>
     </header>

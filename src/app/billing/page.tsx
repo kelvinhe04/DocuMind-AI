@@ -180,7 +180,10 @@ function BillingContent() {
             <div className="rounded-xl bg-slate-800/50 border border-slate-800 p-3">
               <p className="text-xs text-slate-500 mb-1">OCR de imágenes</p>
               <p className={cn("text-base font-bold", plan.ocr ? "text-emerald-400" : "text-slate-500")}>
-                {plan.ocr ? "✓ Incluido" : "✗ No disponible"}
+                {plan.ocr
+                  ? <span className="flex items-center gap-1"><CheckCircle2 className="size-4" /> Incluido</span>
+                  : <span className="flex items-center gap-1"><XCircle className="size-4" /> No disponible</span>
+                }
               </p>
             </div>
           </div>

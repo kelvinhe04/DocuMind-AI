@@ -23,3 +23,12 @@ export interface ChatMessage {
   latency_ms?: number;
   timestamp: Date;
 }
+
+export interface ChatSession {
+  id: string;
+  user_id: string;
+  title: string;
+  share_token: string | null;
+  created_at: string;
+  updated_at: string;
+}

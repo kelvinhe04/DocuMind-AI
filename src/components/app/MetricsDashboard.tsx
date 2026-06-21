@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import {
-  FileText, Hash, MessageSquare, HardDrive, RefreshCw,
+  FileText, Hash, MessageSquare, HardDrive,
   Upload, Bot, Search, AlertCircle, ScanText, ImageIcon,
   ArrowRight, TrendingUp,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
@@ -138,7 +137,7 @@ function QuickAction({ href, icon: Icon, label, iconBg, iconColor }: {
 
 /* ── Main dashboard ──────────────────────────────────────────────────────── */
 export function MetricsDashboard() {
-  const { metrics, loading: mLoading, error, refresh } = useMetrics();
+  const { metrics, loading: mLoading, error } = useMetrics();
   const { documents, loading: dLoading } = useDocuments();
   const { plan, planId } = usePlan();
 
@@ -153,16 +152,6 @@ export function MetricsDashboard() {
           <h2 className="font-heading text-2xl font-bold text-white">Dashboard</h2>
           <p className="mt-0.5 text-xs text-slate-500">Vista general de tu espacio de trabajo</p>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={refresh}
-          disabled={mLoading}
-          className="border-slate-700 bg-slate-800/50 text-slate-300 hover:bg-slate-800 hover:text-white"
-        >
-          <RefreshCw className={cn("mr-2 size-3.5", mLoading && "animate-spin")} />
-          Actualizar
-        </Button>
       </div>
 
       {/* Error banner */}
