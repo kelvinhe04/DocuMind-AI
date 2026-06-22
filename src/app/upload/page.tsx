@@ -4,8 +4,8 @@ import { UploadDropzone } from "@/components/app/UploadDropzone";
 export default function UploadPage() {
   return (
     <AppShell>
-      <div className="flex-1 flex flex-col items-center justify-start pt-10 w-full">
-        <div className="w-full max-w-2xl">
+      <div className="w-full">
+        <div className="mx-auto w-full max-w-4xl">
           <UploadDropzone />
         </div>
       </div>
