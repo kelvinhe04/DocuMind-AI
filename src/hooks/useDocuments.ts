@@ -1,28 +1,66 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
+
 import { api } from "@/lib/api";
 import type { Document } from "@/types/document";
 
+let documentsCache: Document[] | null = null;
+let documentsRequest: Promise<Document[]> | null = null;
+
+async function loadDocuments(force = false) {
+  if (!force && documentsCache) return documentsCache;
+  if (!force && documentsRequest) return documentsRequest;
+
+  documentsRequest = api
+    .get("/documents")
+    .then((res) => {
+      const documents = res.data.documents ?? [];
+      documentsCache = documents;
+      return documents;
+    })
+    .finally(() => {
+      documentsRequest = null;
+    });
+
+  return documentsRequest;
+}
+
 export function useDocuments() {
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { isLoaded, isSignedIn } = useUser();
+  const [documents, setDocuments] = useState<Document[]>(documentsCache ?? []);
+  const [loading, setLoading] = useState(!documentsCache);
   const [error, setError] = useState<string | null>(null);
 
-  const fetch = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await api.get("/documents");
-      setDocuments(res.data.documents ?? []);
-    } catch {
-      setError("No se pudieron cargar los documentos.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const fetch = useCallback(
+    async (force = false) => {
+      if (!isLoaded) return;
 
-  useEffect(() => { fetch(); }, [fetch]);
+      if (!isSignedIn) {
+        setDocuments([]);
+        setLoading(false);
+        return;
+      }
 
-  return { documents, loading, error, refresh: fetch };
+      setLoading(true);
+      setError(null);
+      try {
+        setDocuments(await loadDocuments(force));
+      } catch {
+        setError("No se pudieron cargar los documentos.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [isLoaded, isSignedIn],
+  );
+
+  useEffect(() => {
+    fetch(false);
+  }, [fetch]);
+
+  const refresh = useCallback(() => fetch(true), [fetch]);
+
+  return { documents, loading, error, refresh };
 }

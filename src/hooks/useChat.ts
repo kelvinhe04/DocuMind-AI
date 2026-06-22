@@ -1,12 +1,56 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 import type { ChatMessage, ChatResponse } from "@/types/chat";
 
 const TIMEOUT_MS = 30_000;
+const messageCache = new Map<string, ChatMessage[]>();
+const messageRequests = new Map<string, Promise<ChatMessage[]>>();
+
+function normalizeMessages(data: {
+  messages?: Array<{
+    id: number;
+    role: string;
+    content: string;
+    sources?: unknown;
+    used_llm?: boolean;
+    latency_ms?: number;
+    created_at: string;
+  }>;
+}): ChatMessage[] {
+  return (data.messages ?? []).map((m) => ({
+    id: String(m.id),
+    role: m.role as "user" | "assistant",
+    content: m.content,
+    sources: (m.sources as ChatMessage["sources"]) ?? undefined,
+    used_llm: m.used_llm ?? undefined,
+    latency_ms: m.latency_ms ?? undefined,
+    timestamp: new Date(m.created_at),
+  }));
+}
+
+async function loadMessages(chatId: string, force = false) {
+  if (!force && messageCache.has(chatId)) return messageCache.get(chatId) ?? [];
+  if (!force && messageRequests.has(chatId)) return messageRequests.get(chatId) ?? Promise.resolve([]);
+
+  const request = fetch(`/api/proxy/chats/${chatId}/messages`)
+    .then((r) => (r.ok ? r.json() : { messages: [] }))
+    .then((data) => {
+      const messages = normalizeMessages(data);
+      messageCache.set(chatId, messages);
+      return messages;
+    })
+    .catch(() => []);
+
+  messageRequests.set(chatId, request);
+  request.finally(() => messageRequests.delete(chatId));
+  return request;
+}
 
 export function useChat(chatId: string | null, onTitleUpdate?: (id: string, title: string) => void) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const { isLoaded, isSignedIn } = useUser();
+  const [messages, setMessages] = useState<ChatMessage[]>(chatId ? (messageCache.get(chatId) ?? []) : []);
   const [loading, setLoading] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
 
@@ -16,37 +60,46 @@ export function useChat(chatId: string | null, onTitleUpdate?: (id: string, titl
       setMessages([]);
       return;
     }
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      setMessages([]);
+      setHistoryLoading(false);
+      return;
+    }
+    if (messageCache.has(chatId)) {
+      setMessages(messageCache.get(chatId) ?? []);
+      setHistoryLoading(false);
+      return;
+    }
+
+    let cancelled = false;
     setHistoryLoading(true);
-    fetch(`/api/proxy/chats/${chatId}/messages`)
-      .then((r) => (r.ok ? r.json() : { messages: [] }))
-      .then((data) => {
-        const msgs: ChatMessage[] = (data.messages ?? []).map((m: {
-          id: number; role: string; content: string;
-          sources?: unknown; used_llm?: boolean; latency_ms?: number; created_at: string;
-        }) => ({
-          id: String(m.id),
-          role: m.role as "user" | "assistant",
-          content: m.content,
-          sources: m.sources ?? undefined,
-          used_llm: m.used_llm ?? undefined,
-          latency_ms: m.latency_ms ?? undefined,
-          timestamp: new Date(m.created_at),
-        }));
-        setMessages(msgs);
+    loadMessages(chatId)
+      .then((msgs) => {
+        if (!cancelled) setMessages(msgs);
       })
-      .catch(() => setMessages([]))
-      .finally(() => setHistoryLoading(false));
-  }, [chatId]);
+      .finally(() => {
+        if (!cancelled) setHistoryLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [chatId, isLoaded, isSignedIn]);
 
   const sendMessage = useCallback(
-    async (question: string, mode: "chat" | "search" = "chat", filterDoc?: string) => {
+    async (question: string, mode: "chat" | "search" = "chat", filterDoc?: string, targetChatId = chatId) => {
       const userMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: "user",
         content: question,
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, userMsg]);
+      setMessages((prev) => {
+        const next = [...prev, userMsg];
+        if (targetChatId) messageCache.set(targetChatId, next);
+        return next;
+      });
       setLoading(true);
 
       const controller = new AbortController();
@@ -61,7 +114,7 @@ export function useChat(chatId: string | null, onTitleUpdate?: (id: string, titl
             mode,
             top_k: 5,
             filter_doc: filterDoc ?? null,
-            chat_id: chatId ?? null,
+            chat_id: targetChatId ?? null,
           }),
           signal: controller.signal,
         });
@@ -83,11 +136,15 @@ export function useChat(chatId: string | null, onTitleUpdate?: (id: string, titl
           latency_ms: data.latency_ms,
           timestamp: new Date(),
         };
-        setMessages((prev) => [...prev, assistantMsg]);
+        setMessages((prev) => {
+          const next = [...prev, assistantMsg];
+          if (targetChatId) messageCache.set(targetChatId, next);
+          return next;
+        });
 
         // After first user message the backend auto-titles the chat
-        if (chatId && onTitleUpdate && messages.length === 0) {
-          onTitleUpdate(chatId, question.slice(0, 60));
+        if (targetChatId && onTitleUpdate && messages.length === 0) {
+          onTitleUpdate(targetChatId, question.slice(0, 60));
         }
 
         return assistantMsg;
@@ -104,7 +161,11 @@ export function useChat(chatId: string | null, onTitleUpdate?: (id: string, titl
           content,
           timestamp: new Date(),
         };
-        setMessages((prev) => [...prev, errorMsg]);
+        setMessages((prev) => {
+          const next = [...prev, errorMsg];
+          if (targetChatId) messageCache.set(targetChatId, next);
+          return next;
+        });
       } finally {
         setLoading(false);
       }

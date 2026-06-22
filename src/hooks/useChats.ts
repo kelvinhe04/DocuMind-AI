@@ -1,27 +1,56 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useUser } from "@clerk/nextjs";
 import type { ChatSession } from "@/types/chat";
 
-export function useChats() {
-  const [chats, setChats] = useState<ChatSession[]>([]);
-  const [loading, setLoading] = useState(true);
+let chatsCache: ChatSession[] | null = null;
+let chatsRequest: Promise<ChatSession[]> | null = null;
 
-  const fetchChats = useCallback(async () => {
+async function loadChats(force = false) {
+  if (!force && chatsCache) return chatsCache;
+  if (!force && chatsRequest) return chatsRequest;
+
+  chatsRequest = fetch("/api/proxy/chats")
+    .then(async (res) => {
+      if (!res.ok) return [];
+      const data = await res.json();
+      const chats = data.chats ?? [];
+      chatsCache = chats;
+      return chats;
+    })
+    .finally(() => {
+      chatsRequest = null;
+    });
+
+  return chatsRequest;
+}
+
+export function useChats() {
+  const { isLoaded, isSignedIn } = useUser();
+  const [chats, setChats] = useState<ChatSession[]>(chatsCache ?? []);
+  const [loading, setLoading] = useState(!chatsCache);
+
+  const fetchChats = useCallback(async (force = false) => {
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      chatsCache = [];
+      setChats([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     try {
-      const res = await fetch("/api/proxy/chats");
-      if (res.ok) {
-        const data = await res.json();
-        setChats(data.chats ?? []);
-      }
+      setChats(await loadChats(force));
     } catch {
       // ignore
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isLoaded, isSignedIn]);
 
-  useEffect(() => { fetchChats(); }, [fetchChats]);
+  useEffect(() => { fetchChats(false); }, [fetchChats]);
 
   const createChat = useCallback(async (title = "Nueva conversación"): Promise<ChatSession | null> => {
     try {
@@ -33,6 +62,7 @@ export function useChats() {
       if (!res.ok) return null;
       const chat: ChatSession = await res.json();
       setChats((prev) => [chat, ...prev]);
+      chatsCache = [chat, ...(chatsCache ?? [])];
       return chat;
     } catch {
       return null;
@@ -44,6 +74,7 @@ export function useChats() {
       const res = await fetch(`/api/proxy/chats/${chatId}`, { method: "DELETE" });
       if (!res.ok) return false;
       setChats((prev) => prev.filter((c) => c.id !== chatId));
+      chatsCache = (chatsCache ?? []).filter((c) => c.id !== chatId);
       return true;
     } catch {
       return false;
@@ -59,6 +90,7 @@ export function useChats() {
       });
       if (!res.ok) return false;
       setChats((prev) => prev.map((c) => c.id === chatId ? { ...c, title } : c));
+      chatsCache = (chatsCache ?? []).map((c) => c.id === chatId ? { ...c, title } : c);
       return true;
     } catch {
       return false;
@@ -72,6 +104,7 @@ export function useChats() {
       const data = await res.json();
       const token: string = data.share_token;
       setChats((prev) => prev.map((c) => c.id === chatId ? { ...c, share_token: token } : c));
+      chatsCache = (chatsCache ?? []).map((c) => c.id === chatId ? { ...c, share_token: token } : c);
       return token;
     } catch {
       return null;
@@ -83,6 +116,7 @@ export function useChats() {
       const res = await fetch(`/api/proxy/chats/${chatId}/share`, { method: "DELETE" });
       if (!res.ok) return false;
       setChats((prev) => prev.map((c) => c.id === chatId ? { ...c, share_token: null } : c));
+      chatsCache = (chatsCache ?? []).map((c) => c.id === chatId ? { ...c, share_token: null } : c);
       return true;
     } catch {
       return false;
@@ -91,7 +125,10 @@ export function useChats() {
 
   const updateLocalTitle = useCallback((chatId: string, title: string) => {
     setChats((prev) => prev.map((c) => c.id === chatId ? { ...c, title } : c));
+    chatsCache = (chatsCache ?? []).map((c) => c.id === chatId ? { ...c, title } : c);
   }, []);
 
-  return { chats, loading, createChat, deleteChat, renameChat, shareChat, unshareChat, updateLocalTitle, refetch: fetchChats };
+  const refetch = useCallback(() => fetchChats(true), [fetchChats]);
+
+  return { chats, loading, createChat, deleteChat, renameChat, shareChat, unshareChat, updateLocalTitle, refetch };
 }
