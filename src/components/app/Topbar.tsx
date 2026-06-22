@@ -3,61 +3,64 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
-import { Menu, Brain, Home } from "lucide-react";
-import { clerkDarkAppearance } from "@/lib/clerkAppearance";
+import { Brain, Home, Menu, Search } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetTrigger,
   SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
+import { clerkDarkAppearance } from "@/lib/clerkAppearance";
+import { cn } from "@/lib/utils";
 import { APP_NAV, APP_NAV_BOTTOM, PAGE_TITLES } from "./nav";
 import { PlanBadge } from "./PlanBadge";
 
 export function Topbar() {
   const pathname = usePathname();
   const key = Object.keys(PAGE_TITLES).find((k) => pathname.startsWith(k));
-  const title = key ? PAGE_TITLES[key] : "DocuMind AI";
+  const title = key ? PAGE_TITLES[key] : "DocuMind";
   const allNav = [...APP_NAV, ...APP_NAV_BOTTOM];
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-slate-800/60 bg-slate-900/95 px-4">
+    <header className="flex h-16 shrink-0 items-center gap-3 border-b border-zinc-800/80 bg-[#0b0b0c]/90 px-4 backdrop-blur">
       <Sheet>
         <SheetTrigger
           render={
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
-              aria-label="Abrir menú"
+              className="text-zinc-400 hover:bg-zinc-800 hover:text-white md:hidden"
+              aria-label="Abrir menu"
             />
           }
         >
           <Menu className="size-5" />
         </SheetTrigger>
-        <SheetContent side="left" className="w-64 p-0 sm:max-w-none">
-          <SheetTitle className="flex h-14 items-center gap-2 border-b px-4">
-            <Brain className="size-5 text-violet-500" />
-            DocuMind AI
+        <SheetContent side="left" className="w-64 border-zinc-800 bg-[#0b0b0c] p-0 text-zinc-100 sm:max-w-none">
+          <SheetTitle className="flex h-16 items-center gap-3 border-b border-zinc-800 px-4 text-white">
+            <div className="flex size-9 items-center justify-center rounded-lg border border-amber-400/20 bg-amber-400/10">
+              <Brain className="size-5 text-amber-300" />
+            </div>
+            DocuMind
           </SheetTitle>
           <nav className="flex flex-col gap-1 p-3">
             {allNav.map((item) => {
               const Icon = item.icon;
+              const active = pathname.startsWith(item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                    pathname.startsWith(item.href)
-                      ? "bg-violet-500/15 text-violet-300"
-                      : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200",
+                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                    active
+                      ? "bg-amber-400/10 text-white"
+                      : "text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-100",
                   )}
                 >
-                  <Icon className="size-4" />
+                  <Icon className={cn("size-4", active ? "text-amber-300" : "text-zinc-500")} />
                   {item.label}
                 </Link>
               );
@@ -66,13 +69,23 @@ export function Topbar() {
         </SheetContent>
       </Sheet>
 
-      <h1 className="font-heading text-base font-semibold text-white">{title}</h1>
+      <div className="min-w-0">
+        <h1 className="truncate font-heading text-base font-semibold text-white">{title}</h1>
+        <p className="hidden text-[11px] text-zinc-500 sm:block">Operacion documental</p>
+      </div>
 
       <div className="ml-auto flex items-center gap-3">
+        <Link
+          href="/search"
+          className="hidden size-8 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-400 transition-colors hover:border-amber-400/30 hover:text-amber-200 sm:flex"
+          title="Buscar"
+        >
+          <Search className="size-4" />
+        </Link>
         <PlanBadge />
         <Link
           href="/"
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+          className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-zinc-100"
           title="Ir a la landing"
         >
           <Home className="size-4" />

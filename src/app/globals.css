@@ -387,3 +387,28 @@
   mask-composite: exclude;
   pointer-events: none;
 }
+
+.app-workspace {
+  background:
+    linear-gradient(rgb(161 161 170 / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(161 161 170 / 0.025) 1px, transparent 1px),
+    linear-gradient(180deg, #10100f 0%, #0b0b0c 48%, #070706 100%);
+  background-size: 32px 32px, 32px 32px, auto;
+}
+
+.app-panel {
+  background: rgb(24 24 27 / 0.74);
+  border: 1px solid rgb(63 63 70 / 0.68);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.035) inset, 0 18px 48px rgb(0 0 0 / 0.16);
+}
+
+.app-panel-quiet {
+  background: rgb(9 9 11 / 0.38);
+  border: 1px solid rgb(63 63 70 / 0.58);
+}
+
+.app-kicker {
+  border: 1px solid rgb(245 158 11 / 0.26);
+  background: rgb(245 158 11 / 0.10);
+  color: rgb(253 230 138);
+}

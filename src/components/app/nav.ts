@@ -1,10 +1,10 @@
 import {
+  CreditCard,
+  FileText,
   LayoutDashboard,
   MessageSquare,
-  FileText,
-  Upload,
   Search,
-  CreditCard,
+  Upload,
   type LucideIcon,
 } from "lucide-react";
 
@@ -15,11 +15,11 @@ export const APP_NAV: NavItem[] = [
   { href: "/chat", label: "Chat", icon: MessageSquare },
   { href: "/documents", label: "Documentos", icon: FileText },
   { href: "/upload", label: "Subir", icon: Upload },
-  { href: "/search", label: "Búsqueda", icon: Search },
+  { href: "/search", label: "Busqueda", icon: Search },
 ];
 
 export const APP_NAV_BOTTOM: NavItem[] = [
-  { href: "/billing", label: "Facturación", icon: CreditCard },
+  { href: "/billing", label: "Facturacion", icon: CreditCard },
 ];
 
 export const PAGE_TITLES: Record<string, string> = {
@@ -27,7 +27,7 @@ export const PAGE_TITLES: Record<string, string> = {
   "/chat": "Chat",
   "/documents": "Documentos",
   "/upload": "Subir documento",
-  "/search": "Búsqueda semántica",
-  "/billing": "Facturación",
+  "/search": "Busqueda semantica",
+  "/billing": "Facturacion",
   "/pricing": "Planes",
 };

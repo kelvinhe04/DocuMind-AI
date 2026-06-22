@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, FileText } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import type { Source } from "@/types/chat";
 
@@ -23,20 +27,20 @@ export function SourceCitations({ sources }: Props) {
 
   return (
     <>
-      <div className="mt-3 space-y-1">
-        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Fuentes</p>
+      <div className="mt-3 space-y-1.5">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">Fuentes</p>
         <div className="flex flex-wrap gap-2">
-          {visible.map((s, i) => (
+          {visible.map((source, index) => (
             <button
-              key={i}
-              onClick={() => setSelectedSource(s)}
-              className="flex items-center gap-1.5 rounded-md border bg-muted/50 px-2 py-1 text-xs hover:bg-muted transition-colors cursor-pointer"
+              key={index}
+              onClick={() => setSelectedSource(source)}
+              className="flex cursor-pointer items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900/70 px-2 py-1 text-xs text-zinc-300 transition-colors hover:border-amber-400/30 hover:bg-amber-400/10"
             >
-              <FileText className="size-3 text-violet-500" />
-              <span className="max-w-[160px] truncate">{s.filename}</span>
-              <span className="text-muted-foreground">p.{s.page}</span>
-              <Badge variant="outline" className="text-[10px] py-0 px-1">
-                {(s.score * 100).toFixed(0)}%
+              <FileText className="size-3 text-amber-300" />
+              <span className="max-w-[160px] truncate">{source.filename}</span>
+              <span className="text-zinc-600">p.{source.page}</span>
+              <Badge variant="outline" className="border-zinc-700 px-1 py-0 text-[10px] text-zinc-400">
+                {(source.score * 100).toFixed(0)}%
               </Badge>
             </button>
           ))}
@@ -44,31 +48,39 @@ export function SourceCitations({ sources }: Props) {
             <Button
               variant="ghost"
               size="sm"
-              className="h-auto px-2 py-1 text-xs"
+              className="h-auto px-2 py-1 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
               onClick={() => setExpanded(!expanded)}
             >
-              {expanded ? <><ChevronUp className="size-3 mr-1" />Menos</> : <><ChevronDown className="size-3 mr-1" />+{sources.length - 3} más</>}
+              {expanded ? (
+                <>
+                  <ChevronUp className="mr-1 size-3" />Menos
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="mr-1 size-3" />+{sources.length - 3} mas
+                </>
+              )}
             </Button>
           )}
         </div>
       </div>
 
       <Dialog open={!!selectedSource} onOpenChange={() => setSelectedSource(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg border-zinc-800 bg-zinc-950 text-zinc-100">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base">
-              <FileText className="size-4 text-violet-500" />
-              {selectedSource?.filename} — página {selectedSource?.page}
+              <FileText className="size-4 text-amber-300" />
+              {selectedSource?.filename} - pagina {selectedSource?.page}
             </DialogTitle>
           </DialogHeader>
-          <div className="rounded-md bg-muted p-4 text-sm leading-relaxed whitespace-pre-wrap max-h-64 overflow-y-auto">
+          <div className="max-h-64 overflow-y-auto whitespace-pre-wrap rounded-md border border-zinc-800 bg-zinc-900/70 p-4 text-sm leading-relaxed text-zinc-300">
             {selectedSource?.text}
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Badge variant="secondary">Score: {selectedSource ? (selectedSource.score * 100).toFixed(1) : 0}%</Badge>
-            {selectedSource?.source_type && (
-              <Badge variant="outline">{selectedSource.source_type}</Badge>
-            )}
+          <div className="flex items-center gap-2 text-xs text-zinc-500">
+            <Badge variant="secondary">
+              Score: {selectedSource ? (selectedSource.score * 100).toFixed(1) : 0}%
+            </Badge>
+            {selectedSource?.source_type && <Badge variant="outline">{selectedSource.source_type}</Badge>}
           </div>
         </DialogContent>
       </Dialog>
