@@ -42,7 +42,7 @@ function AnimatedProgressBar({ active, done }: { active: boolean; done: boolean 
       <div
         className={cn(
           "relative h-full overflow-hidden rounded-full transition-[width] duration-500 ease-out",
-          done ? "bg-emerald-500" : "bg-amber-400",
+          done ? "bg-emerald-500" : "bg-violet-500",
         )}
         style={{ width: `${progress}%` }}
       >
@@ -169,7 +169,7 @@ export function UploadDropzone({ onSuccess }: Props) {
     <>
       <div className="space-y-5">
         <section className="app-panel overflow-hidden rounded-lg">
-          <div className="border-b border-zinc-800/70 bg-[linear-gradient(135deg,rgba(245,158,11,0.10),transparent_42%)] p-5">
+          <div className="border-b border-zinc-800/70 bg-[linear-gradient(135deg,rgba(139,92,246,0.10),transparent_42%)] p-5">
             <div className="app-kicker inline-flex items-center gap-2 rounded-md px-2.5 py-1 text-xs font-medium">
               <ScanText className="size-3.5" />
               OCR automatico incluido
@@ -186,16 +186,16 @@ export function UploadDropzone({ onSuccess }: Props) {
               className={cn(
                 "relative flex cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed p-10 text-center transition-colors",
                 isDragActive
-                  ? "border-amber-400 bg-amber-400/10"
-                  : "border-zinc-700 bg-zinc-950/45 hover:border-amber-400/60 hover:bg-zinc-900/70",
+                  ? "border-violet-500 bg-violet-500/10"
+                  : "border-zinc-700 bg-zinc-950/45 hover:border-violet-500/60 hover:bg-zinc-900/70",
               )}
             >
               <input {...getInputProps()} multiple />
               <div className={cn(
                 "flex size-14 items-center justify-center rounded-lg transition-colors",
-                isDragActive ? "bg-amber-500/20" : "bg-zinc-800",
+                isDragActive ? "bg-violet-500/20" : "bg-zinc-800",
               )}>
-                <Upload className={cn("size-6 transition-colors", isDragActive ? "text-amber-200" : "text-zinc-400")} />
+                <Upload className={cn("size-6 transition-colors", isDragActive ? "text-violet-300" : "text-zinc-400")} />
               </div>
               <div className="space-y-1">
                 <p className="text-sm font-medium text-zinc-200">
@@ -254,12 +254,12 @@ export function UploadDropzone({ onSuccess }: Props) {
                     <div className="flex items-center gap-3">
                       <div className={cn(
                         "flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors duration-300",
-                        isDone ? "bg-emerald-500/15" : "bg-amber-500/10",
+                        isDone ? "bg-emerald-500/15" : "bg-violet-500/10",
                       )}>
                         {isDone ? (
                           <CheckCircle2 className="size-4 text-emerald-400" />
                         ) : isProcessing ? (
-                          <Loader2 className="size-4 animate-spin text-amber-300" />
+                          <Loader2 className="size-4 animate-spin text-violet-400" />
                         ) : (
                           <FileText className="size-4 text-zinc-500" />
                         )}
@@ -284,7 +284,7 @@ export function UploadDropzone({ onSuccess }: Props) {
                         <Badge className="border-zinc-700 bg-zinc-800 py-0 text-[10px] text-zinc-300 hover:bg-zinc-800">{entry.result.pages} pags.</Badge>
                         <Badge className="border-zinc-700 bg-zinc-800 py-0 text-[10px] text-zinc-300 hover:bg-zinc-800">{entry.result.chunks} fragmentos</Badge>
                         {entry.result.source_type === "pdf_ocr" && (
-                          <Badge className="border-amber-500/20 bg-amber-500/10 py-0 text-[10px] text-amber-300 hover:bg-amber-500/10">PDF OCR</Badge>
+                          <Badge className="border-cyan-500/20 bg-cyan-500/10 py-0 text-[10px] text-cyan-400 hover:bg-cyan-500/10">PDF OCR</Badge>
                         )}
                         {entry.result.source_type === "image_ocr" && (
                           <Badge className="border-emerald-500/20 bg-emerald-500/10 py-0 text-[10px] text-emerald-300 hover:bg-emerald-500/10">Imagen OCR</Badge>

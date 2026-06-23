@@ -41,9 +41,9 @@ type MetricTone = "gold" | "emerald" | "amber" | "orange";
 
 const toneStyles: Record<MetricTone, { icon: string; bar: string; panel: string }> = {
   gold: {
-    icon: "bg-amber-500/15 text-amber-300",
-    bar: "bg-amber-400",
-    panel: "hover:border-amber-500/30",
+    icon: "bg-violet-500/15 text-violet-400",
+    bar: "bg-violet-500",
+    panel: "hover:border-violet-500/30",
   },
   emerald: {
     icon: "bg-emerald-500/15 text-emerald-300",
@@ -51,20 +51,20 @@ const toneStyles: Record<MetricTone, { icon: string; bar: string; panel: string 
     panel: "hover:border-emerald-500/30",
   },
   amber: {
-    icon: "bg-amber-500/15 text-amber-300",
-    bar: "bg-amber-400",
-    panel: "hover:border-amber-500/30",
+    icon: "bg-cyan-500/15 text-cyan-400",
+    bar: "bg-cyan-500",
+    panel: "hover:border-cyan-500/30",
   },
   orange: {
-    icon: "bg-orange-500/15 text-orange-300",
-    bar: "bg-orange-400",
-    panel: "hover:border-orange-500/30",
+    icon: "bg-violet-500/15 text-violet-400",
+    bar: "bg-violet-500",
+    panel: "hover:border-violet-500/30",
   },
 };
 
 function SourceIcon({ type }: { type: Document["source_type"] }) {
   if (type === "pdf_text") return <FileText className="size-4 text-zinc-400" />;
-  if (type === "pdf_ocr") return <ScanText className="size-4 text-amber-300" />;
+  if (type === "pdf_ocr") return <ScanText className="size-4 text-cyan-400" />;
   return <ImageIcon className="size-4 text-emerald-300" />;
 }
 
@@ -187,7 +187,7 @@ function RecentDocuments({ docs, loading }: { docs: Document[]; loading: boolean
               <FileText className="size-5 text-zinc-500" />
             </div>
             <p className="mt-3 text-sm font-medium text-zinc-300">Aun no hay documentos</p>
-            <Link href="/upload" className="mt-1 inline-flex text-xs font-medium text-amber-300 hover:text-amber-200">
+            <Link href="/upload" className="mt-1 inline-flex text-xs font-medium text-violet-400 hover:text-violet-300">
               Subir el primero
             </Link>
           </div>
@@ -268,7 +268,7 @@ function PlanPanel({
           <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-zinc-100">
             {planId === "free" ? (
               <>
-                <AlertCircle className="size-4 text-amber-300" />
+                <AlertCircle className="size-4 text-violet-400" />
                 Limitado
               </>
             ) : (
@@ -281,10 +281,10 @@ function PlanPanel({
         </div>
         <Link
           href="/pricing"
-          className="app-panel-quiet rounded-lg p-3 transition-colors hover:border-amber-400/35 hover:bg-amber-400/10"
+          className="app-panel-quiet rounded-lg p-3 transition-colors hover:border-violet-500/35 hover:bg-violet-500/10"
         >
           <p className="text-xs text-zinc-500">Mejorar</p>
-          <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-amber-200">
+                <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-violet-300">
             Planes <ArrowRight className="size-4" />
           </p>
         </Link>
@@ -312,8 +312,8 @@ export function MetricsDashboard() {
     <div className="space-y-5">
       <section className="app-panel overflow-hidden rounded-lg">
         <div className="grid gap-0 lg:grid-cols-[1fr_360px]">
-          <div className="relative border-b border-zinc-800/70 bg-[linear-gradient(135deg,rgba(245,158,11,0.10),transparent_38%),linear-gradient(90deg,rgba(16,185,129,0.05),transparent_58%)] p-6 lg:border-b-0 lg:border-r lg:p-7">
-            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,#f59e0b,#10b981,transparent)]" />
+          <div className="relative border-b border-zinc-800/70 bg-[linear-gradient(135deg,rgba(139,92,246,0.10),transparent_38%),linear-gradient(90deg,rgba(16,185,129,0.05),transparent_58%)] p-6 lg:border-b-0 lg:border-r lg:p-7">
+            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,#8b5cf6,#10b981,transparent)]" />
             <div className="flex flex-wrap items-start justify-between gap-5 pt-1">
               <div>
                 <div className="app-kicker inline-flex items-center gap-2 rounded-md px-2.5 py-1 text-xs font-medium">
@@ -329,7 +329,7 @@ export function MetricsDashboard() {
               </div>
               <Link
                 href="/chat"
-                className="inline-flex items-center gap-2 rounded-lg bg-amber-300 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-[0_14px_30px_rgba(245,158,11,0.16)] transition-colors hover:bg-amber-200"
+                className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(139,92,246,0.16)] transition-colors hover:bg-violet-500"
               >
                 <Bot className="size-4" />
                 Preguntar ahora
@@ -352,7 +352,7 @@ export function MetricsDashboard() {
               </div>
               <div className="app-panel-quiet rounded-lg p-3">
                 <p className="text-xs text-zinc-500">Respuesta</p>
-                <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-amber-200">
+          <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-violet-300">
                   <Zap className="size-4" />
                   RAG con citas
                 </p>
@@ -375,15 +375,15 @@ export function MetricsDashboard() {
       )}
 
       {planId === "free" && docsLeft !== null && docsLeft <= 1 && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-500/25 bg-amber-500/10 px-4 py-3">
-          <span className="text-sm text-amber-100">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-violet-500/25 bg-violet-500/10 px-4 py-3">
+          <span className="text-sm text-violet-100">
             {docsLeft === 0
               ? "Llegaste al limite de documentos del plan Free."
               : `Te queda ${docsLeft} documento disponible en Free.`}
           </span>
           <Link
             href="/pricing"
-            className="rounded-md bg-amber-300 px-3 py-1.5 text-xs font-semibold text-zinc-950 transition-colors hover:bg-amber-200"
+            className="rounded-md bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-violet-500"
           >
             Ver planes
           </Link>
@@ -433,7 +433,7 @@ export function MetricsDashboard() {
         <div className="app-panel rounded-lg">
           <div className="flex items-center justify-between border-b border-zinc-800/70 px-4 py-3">
             <div className="flex items-center gap-3">
-              <div className="flex size-9 items-center justify-center rounded-lg bg-amber-500/15 text-amber-300">
+              <div className="flex size-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-400">
                 <TrendingUp className="size-5" />
               </div>
               <div>

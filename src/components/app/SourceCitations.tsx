@@ -34,9 +34,9 @@ export function SourceCitations({ sources }: Props) {
             <button
               key={index}
               onClick={() => setSelectedSource(source)}
-              className="flex cursor-pointer items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900/70 px-2 py-1 text-xs text-zinc-300 transition-colors hover:border-amber-400/30 hover:bg-amber-400/10"
+              className="flex cursor-pointer items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-900/70 px-2 py-1 text-xs text-zinc-300 transition-colors hover:border-violet-500/30 hover:bg-violet-500/10"
             >
-              <FileText className="size-3 text-amber-300" />
+              <FileText className="size-3 text-violet-400" />
               <span className="max-w-[160px] truncate">{source.filename}</span>
               <span className="text-zinc-600">p.{source.page}</span>
               <Badge variant="outline" className="border-zinc-700 px-1 py-0 text-[10px] text-zinc-400">
@@ -69,7 +69,7 @@ export function SourceCitations({ sources }: Props) {
         <DialogContent className="max-w-lg border-zinc-800 bg-zinc-950 text-zinc-100">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base">
-              <FileText className="size-4 text-amber-300" />
+              <FileText className="size-4 text-violet-400" />
               {selectedSource?.filename} - pagina {selectedSource?.page}
             </DialogTitle>
           </DialogHeader>

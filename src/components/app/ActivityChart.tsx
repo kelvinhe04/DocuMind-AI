@@ -17,9 +17,9 @@ export function ActivityChart({ activity }: { activity: Metrics["activity"] }) {
     <ResponsiveContainer width="100%" height={190}>
       <AreaChart data={activity}>
         <defs>
-          <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.35} />
-            <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+          <linearGradient id="violetGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.35} />
+            <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
@@ -43,16 +43,16 @@ export function ActivityChart({ activity }: { activity: Metrics["activity"] }) {
             fontSize: 12,
             color: "#e4e4e7",
           }}
-          cursor={{ stroke: "rgba(245,158,11,0.28)", strokeWidth: 1 }}
+          cursor={{ stroke: "rgba(139,92,246,0.28)", strokeWidth: 1 }}
         />
         <Area
           type="monotone"
           dataKey="count"
-          stroke="#f59e0b"
-          fill="url(#goldGrad)"
+          stroke="#8b5cf6"
+          fill="url(#violetGrad)"
           strokeWidth={2}
-          dot={{ fill: "#f59e0b", strokeWidth: 0, r: 3 }}
-          activeDot={{ r: 5, fill: "#fbbf24", strokeWidth: 0 }}
+          dot={{ fill: "#8b5cf6", strokeWidth: 0, r: 3 }}
+          activeDot={{ r: 5, fill: "#a78bfa", strokeWidth: 0 }}
           name="Consultas"
         />
       </AreaChart>

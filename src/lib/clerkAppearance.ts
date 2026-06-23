@@ -5,7 +5,7 @@ export const clerkDarkAppearance = {
     colorText: "#fafafa",
     colorTextSecondary: "#a1a1aa",
     colorTextOnPrimaryBackground: "#ffffff",
-    colorPrimary: "#d97706",
+    colorPrimary: "#8b5cf6",
     colorDanger: "#f87171",
     colorSuccess: "#34d399",
     colorNeutral: "#71717a",
@@ -28,7 +28,7 @@ export const clerkDarkAppearance = {
     formFieldInput: "rounded-xl",
     formButtonPrimary: "rounded-xl font-semibold shadow-none",
     footerActionText: "text-zinc-500",
-    footerActionLink: "text-amber-400 hover:text-amber-300 font-medium",
+    footerActionLink: "text-violet-400 hover:text-violet-300 font-medium",
     alertText: "text-red-300",
 
     // UserButton popover

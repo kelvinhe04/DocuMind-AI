@@ -40,8 +40,8 @@ export function Topbar() {
         </SheetTrigger>
         <SheetContent side="left" className="w-64 border-zinc-800 bg-[#0b0b0c] p-0 text-zinc-100 sm:max-w-none">
           <SheetTitle className="flex h-16 items-center gap-3 border-b border-zinc-800 px-4 text-white">
-            <div className="flex size-9 items-center justify-center rounded-lg border border-amber-400/20 bg-amber-400/10">
-              <Brain className="size-5 text-amber-300" />
+            <div className="flex size-9 items-center justify-center rounded-lg border border-violet-500/20 bg-violet-500/10">
+              <Brain className="size-5 text-violet-400" />
             </div>
             DocuMind
           </SheetTitle>
@@ -56,11 +56,11 @@ export function Topbar() {
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                     active
-                      ? "bg-amber-400/10 text-white"
+                      ? "bg-violet-500/10 text-white"
                       : "text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-100",
                   )}
                 >
-                  <Icon className={cn("size-4", active ? "text-amber-300" : "text-zinc-500")} />
+                  <Icon className={cn("size-4", active ? "text-violet-400" : "text-zinc-500")} />
                   {item.label}
                 </Link>
               );
@@ -77,7 +77,7 @@ export function Topbar() {
       <div className="ml-auto flex items-center gap-3">
         <Link
           href="/search"
-          className="hidden size-8 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-400 transition-colors hover:border-amber-400/30 hover:text-amber-200 sm:flex"
+          className="hidden size-8 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-400 transition-colors hover:border-violet-500/30 hover:text-violet-300 sm:flex"
           title="Buscar"
         >
           <Search className="size-4" />

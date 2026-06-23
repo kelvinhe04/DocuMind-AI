@@ -36,8 +36,8 @@ const promptIdeas = [
 
 function BotAvatar() {
   return (
-    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-amber-400/25 bg-amber-400/10">
-      <Brain className="size-4 text-amber-300" />
+    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-violet-500/25 bg-violet-500/10">
+      <Brain className="size-4 text-violet-400" />
     </div>
   );
 }
@@ -56,9 +56,9 @@ function TypingIndicator() {
       <BotAvatar />
       <div className="app-panel rounded-lg px-4 py-3">
         <div className="flex items-center gap-1.5">
-          <span className="size-1.5 animate-bounce rounded-full bg-amber-300/70 [animation-delay:-0.3s]" />
-          <span className="size-1.5 animate-bounce rounded-full bg-amber-300/70 [animation-delay:-0.15s]" />
-          <span className="size-1.5 animate-bounce rounded-full bg-amber-300/70" />
+          <span className="size-1.5 animate-bounce rounded-full bg-violet-400/70 [animation-delay:-0.3s]" />
+          <span className="size-1.5 animate-bounce rounded-full bg-violet-400/70 [animation-delay:-0.15s]" />
+          <span className="size-1.5 animate-bounce rounded-full bg-violet-400/70" />
         </div>
       </div>
     </div>
@@ -90,7 +90,7 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
           {msg.used_llm === false && (
             <Tooltip>
               <TooltipTrigger>
-                <Badge variant="outline" className="cursor-help border-amber-500/40 px-1.5 py-0 text-[10px] text-amber-300">
+                <Badge variant="outline" className="cursor-help border-cyan-500/40 px-1.5 py-0 text-[10px] text-cyan-400">
                   <Zap className="mr-1 size-2.5" />Extractivo
                 </Badge>
               </TooltipTrigger>
@@ -154,11 +154,11 @@ function ChatListItem({
       className={cn(
         "group relative flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors",
         active
-          ? "bg-amber-400/10 text-white shadow-[inset_3px_0_0_0_rgba(245,158,11,0.9)]"
+          ? "bg-violet-500/10 text-white"
           : "text-zinc-400 hover:bg-zinc-800/55 hover:text-zinc-100",
       )}
     >
-      <MessageSquare className={cn("size-3.5 shrink-0", active ? "text-amber-300" : "text-zinc-600 group-hover:text-zinc-400")} />
+      <MessageSquare className={cn("size-3.5 shrink-0", active ? "text-violet-400" : "text-zinc-600 group-hover:text-zinc-400")} />
       {editing ? (
         <input
           ref={inputRef}
@@ -334,12 +334,12 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="flex h-full bg-[#070706]">
+    <div className="flex h-full w-full bg-[#070706]">
       <aside className="flex w-72 shrink-0 flex-col border-r border-zinc-800/80 bg-[#0b0b0c] py-4">
         <div className="px-4">
           <Button
             onClick={handleNewChat}
-            className="h-10 w-full justify-start gap-2 rounded-lg bg-amber-300 text-zinc-950 hover:bg-amber-200"
+            className="h-10 w-full justify-start gap-2 rounded-lg bg-violet-600 text-white hover:bg-violet-500"
           >
             <MessageSquarePlus className="size-4" />
             Nueva conversacion
@@ -398,9 +398,9 @@ export function ChatInterface() {
 
         <div className="flex-1 overflow-y-auto px-7">
           {!historyLoading && messages.length === 0 && !loading && (
-            <div className="mx-auto flex h-full max-w-2xl flex-col items-center justify-center gap-5 text-center">
-              <div className="flex size-16 items-center justify-center rounded-lg border border-amber-400/25 bg-amber-400/10 shadow-[0_18px_48px_rgba(245,158,11,0.08)]">
-                <Brain className="size-8 text-amber-300" />
+            <div className="flex h-full w-full flex-col items-center justify-center gap-5 text-center">
+              <div className="flex size-16 items-center justify-center rounded-lg border border-violet-500/25 bg-violet-500/10 shadow-[0_18px_48px_rgba(139,92,246,0.08)]">
+                <Brain className="size-8 text-violet-400" />
               </div>
               <div>
                 <p className="text-lg font-semibold text-white">Listo para consultar documentos</p>
@@ -413,7 +413,7 @@ export function ChatInterface() {
                   <button
                     key={prompt}
                     onClick={() => setInput(prompt)}
-                    className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-left text-xs leading-5 text-zinc-400 transition-colors hover:border-amber-400/30 hover:bg-amber-400/10 hover:text-zinc-100"
+                    className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-left text-xs leading-5 text-zinc-400 transition-colors hover:border-violet-500/30 hover:bg-violet-500/10 hover:text-zinc-100"
                   >
                     {prompt}
                   </button>
@@ -429,7 +429,7 @@ export function ChatInterface() {
           )}
 
           {!historyLoading && (messages.length > 0 || loading) && (
-            <div className="mx-auto max-w-4xl space-y-6 py-6">
+            <div className="w-full space-y-6 py-6">
               {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
               {loading && <TypingIndicator />}
               <div ref={bottomRef} />
@@ -438,7 +438,7 @@ export function ChatInterface() {
         </div>
 
         <footer className="shrink-0 border-t border-zinc-800/80 bg-[#0b0b0c]/90 px-6 pb-5 pt-3">
-          <div className="mx-auto max-w-4xl">
+          <div className="w-full">
             <div className="flex gap-2 rounded-lg border border-zinc-800 bg-zinc-950/80 p-2 shadow-[0_1px_0_rgba(255,255,255,0.035)_inset]">
               <Input
                 value={input}
@@ -452,7 +452,7 @@ export function ChatInterface() {
                 onClick={submit}
                 disabled={!input.trim() || loading}
                 size="icon"
-                className="size-11 shrink-0 bg-amber-300 text-zinc-950 hover:bg-amber-200"
+                className="size-11 shrink-0 bg-violet-600 text-white hover:bg-violet-500"
               >
                 {loading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
               </Button>

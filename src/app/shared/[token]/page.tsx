@@ -84,7 +84,7 @@ export default async function SharedChatPage({
                 {!isUser && (
                   <div className="flex items-center gap-1.5">
                     {msg.used_llm === false && (
-                      <Badge variant="outline" className="text-[10px] py-0 px-1.5 text-amber-600 border-amber-500/40">
+                      <Badge variant="outline" className="text-[10px] py-0 px-1.5 text-cyan-400 border-cyan-500/40">
                         <Zap className="size-2.5 mr-1" />Extractivo
                       </Badge>
                     )}

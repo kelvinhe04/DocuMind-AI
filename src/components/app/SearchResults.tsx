@@ -14,14 +14,14 @@ function highlight(text: string, query: string) {
   const parts = text.split(new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi"));
   return parts.map((part, index) =>
     part.toLowerCase() === query.toLowerCase()
-      ? <mark key={index} className="rounded bg-amber-400/20 px-0.5 text-amber-100">{part}</mark>
+      ? <mark key={index} className="rounded bg-cyan-500/20 px-0.5 text-cyan-100">{part}</mark>
       : part,
   );
 }
 
 function scoreClass(score: number) {
   if (score > 0.7) return "border-emerald-500/25 bg-emerald-500/10 text-emerald-200";
-  if (score > 0.4) return "border-amber-500/25 bg-amber-500/10 text-amber-200";
+  if (score > 0.4) return "border-cyan-500/25 bg-cyan-500/10 text-cyan-300";
   return "border-zinc-700 bg-zinc-800 text-zinc-400";
 }
 
@@ -57,7 +57,7 @@ export function SearchResults() {
   return (
     <div className="space-y-5">
       <section className="app-panel overflow-hidden rounded-lg">
-        <div className="border-b border-zinc-800/70 bg-[linear-gradient(135deg,rgba(245,158,11,0.10),transparent_42%)] p-5">
+        <div className="border-b border-zinc-800/70 bg-[linear-gradient(135deg,rgba(139,92,246,0.10),transparent_42%)] p-5">
           <div className="app-kicker inline-flex rounded-md px-2.5 py-1 text-xs font-medium">Exploracion</div>
           <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-white">Busqueda semantica</h2>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-zinc-400">
@@ -74,13 +74,13 @@ export function SearchResults() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKey}
                 placeholder="Que estas buscando?"
-                className="h-11 border-zinc-800 bg-zinc-950 pl-9 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-amber-500/30"
+                className="h-11 border-zinc-800 bg-zinc-950 pl-9 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500/30"
               />
             </div>
             <Button
               onClick={search}
               disabled={!query.trim() || loading}
-              className="h-11 bg-amber-300 text-zinc-950 hover:bg-amber-200"
+              className="h-11 bg-violet-600 text-white hover:bg-violet-500"
             >
               {loading ? <Loader2 className="mr-2 size-4 animate-spin" /> : <Search className="mr-2 size-4" />}
               Buscar
@@ -101,7 +101,7 @@ export function SearchResults() {
           <article key={index} className="app-panel rounded-lg p-4 transition-colors hover:border-zinc-700">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="flex min-w-0 items-center gap-3">
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-amber-300">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-violet-400">
                   <FileText className="size-4" />
                 </div>
                 <div className="min-w-0">
@@ -113,7 +113,7 @@ export function SearchResults() {
                 {(result.score * 100).toFixed(0)}% relevancia
               </Badge>
             </div>
-            <p className="mt-4 border-l border-amber-500/30 pl-4 text-sm leading-7 text-zinc-300">
+            <p className="mt-4 border-l border-violet-500/30 pl-4 text-sm leading-7 text-zinc-300">
               {highlight(result.text.slice(0, 520) + (result.text.length > 520 ? "..." : ""), query)}
             </p>
           </article>

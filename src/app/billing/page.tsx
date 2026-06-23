@@ -59,7 +59,7 @@ function UsageBar({
           <div
             className={cn(
               "h-full rounded-full transition-all duration-500",
-              over ? "bg-red-500" : pct > 70 ? "bg-amber-500" : "bg-emerald-500",
+              over ? "bg-red-500" : pct > 70 ? "bg-violet-500" : "bg-emerald-500",
             )}
             style={{ width: `${Math.min(100, pct)}%` }}
           />
@@ -132,7 +132,7 @@ function BillingContent() {
   return (
     <div className="space-y-5">
       <section className="app-panel overflow-hidden rounded-lg">
-        <div className="border-b border-zinc-800/70 bg-[linear-gradient(135deg,rgba(245,158,11,0.10),transparent_42%)] p-5">
+        <div className="border-b border-zinc-800/70 bg-[linear-gradient(135deg,rgba(139,92,246,0.10),transparent_42%)] p-5">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <div className="app-kicker inline-flex items-center gap-2 rounded-md px-2.5 py-1 text-xs font-medium">
@@ -144,7 +144,7 @@ function BillingContent() {
             </div>
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 rounded-lg bg-amber-300 px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-amber-200"
+              className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-violet-500"
             >
               Ver planes <ArrowRight className="size-4" />
             </Link>
@@ -157,8 +157,8 @@ function BillingContent() {
 
         <div className="space-y-3 p-4">
           {confirmState === "loading" && (
-            <div className="flex items-center gap-3 rounded-lg border border-amber-500/25 bg-amber-500/10 p-4 text-sm text-amber-100">
-              <Loader2 className="size-4 shrink-0 animate-spin text-amber-300" />
+            <div className="flex items-center gap-3 rounded-lg border border-violet-500/25 bg-violet-500/10 p-4 text-sm text-violet-100">
+              <Loader2 className="size-4 shrink-0 animate-spin text-violet-400" />
               Verificando pago y actualizando plan...
             </div>
           )}
@@ -183,7 +183,7 @@ function BillingContent() {
             <div className="flex items-center gap-3">
               <div className={cn(
                 "flex size-10 items-center justify-center rounded-lg",
-                isPro ? "bg-amber-500/15 text-amber-300" : "bg-zinc-800 text-zinc-500",
+                isPro ? "bg-violet-500/15 text-violet-400" : "bg-zinc-800 text-zinc-500",
               )}>
                 <CreditCard className="size-5" />
               </div>
@@ -197,7 +197,7 @@ function BillingContent() {
             ) : (
               <span className={cn(
                 "rounded-md px-3 py-1 text-xs font-semibold",
-                isPro ? "border border-amber-500/30 bg-amber-500/10 text-amber-200" : "border border-zinc-700 bg-zinc-800 text-zinc-400",
+                isPro ? "border border-violet-500/30 bg-violet-500/10 text-violet-300" : "border border-zinc-700 bg-zinc-800 text-zinc-400",
               )}>
                 {plan.name}
               </span>
@@ -232,10 +232,10 @@ function BillingContent() {
             </div>
 
             {!isPro && (
-              <div className="rounded-lg border border-amber-500/25 bg-amber-500/10 p-4">
+              <div className="rounded-lg border border-violet-500/25 bg-violet-500/10 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-200">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-violet-500/15 text-violet-300">
                       <Sparkles className="size-4" />
                     </div>
                     <p className="text-sm leading-6 text-zinc-300">
@@ -244,7 +244,7 @@ function BillingContent() {
                   </div>
                   <Link
                     href="/pricing"
-                    className="inline-flex items-center gap-2 rounded-lg bg-amber-300 px-3 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-amber-200"
+                    className="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-violet-500"
                   >
                     Mejorar <ArrowRight className="size-4" />
                   </Link>
@@ -269,7 +269,7 @@ function BillingContent() {
                   key={item.id}
                   className={cn(
                     "flex items-center justify-between rounded-lg px-3 py-3 transition-colors",
-                    current ? "bg-amber-500/10" : "hover:bg-zinc-800/40",
+                    current ? "bg-violet-500/10" : "hover:bg-zinc-800/40",
                   )}
                 >
                   <div className="flex items-center gap-3">

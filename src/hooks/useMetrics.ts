@@ -34,7 +34,7 @@ export function useMetrics() {
   const [error, setError] = useState<string | null>(null);
 
   const fetch = useCallback(
-    async (force = false) => {
+    async (force = false, silent = false) => {
       if (!isLoaded) return;
 
       if (!isSignedIn) {
@@ -43,14 +43,14 @@ export function useMetrics() {
         return;
       }
 
-      setLoading(true);
-      setError(null);
+      if (!silent) setLoading(true);
+      if (!silent) setError(null);
       try {
         setMetrics(await loadMetrics(force));
       } catch {
-        setError("No se pudieron cargar las metricas.");
+        if (!silent) setError("No se pudieron cargar las metricas.");
       } finally {
-        setLoading(false);
+        if (!silent) setLoading(false);
       }
     },
     [isLoaded, isSignedIn],
@@ -58,7 +58,7 @@ export function useMetrics() {
 
   useEffect(() => {
     fetch(false);
-    const id = setInterval(() => fetch(true), 30_000);
+    const id = setInterval(() => fetch(true, true), 30_000);
     return () => clearInterval(id);
   }, [fetch]);
 
