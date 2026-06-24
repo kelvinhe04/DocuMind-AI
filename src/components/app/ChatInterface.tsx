@@ -27,6 +27,7 @@ import type { ChatMessage, ChatSession } from "@/types/chat";
 import { useChat } from "@/hooks/useChat";
 import { useChats } from "@/hooks/useChats";
 import { SourceCitations } from "./SourceCitations";
+import { ConfirmModal } from "./ConfirmModal";
 
 const promptIdeas = [
   "Resume el ultimo contrato cargado",
@@ -84,7 +85,7 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
       <BotAvatar />
       <div className="max-w-[78%] space-y-2">
         <div className="app-panel rounded-lg px-4 py-3 text-sm leading-7 text-zinc-200">
-          <div className="whitespace-pre-wrap">{msg.content}</div>
+          <div className="whitespace-pre-wrap">{msg.content.replace(/\*\*/g, "")}</div>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
           {msg.used_llm === false && (
@@ -289,6 +290,7 @@ export function ChatInterface() {
   } = useChats();
 
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  const [confirmDeleteChatId, setConfirmDeleteChatId] = useState<string | null>(null);
   const activeChat = chats.find((c) => c.id === activeChatId) ?? null;
   const { messages, loading, historyLoading, sendMessage } = useChat(
     activeChatId,
@@ -370,7 +372,7 @@ export function ChatInterface() {
                   chat={chat}
                   active={chat.id === activeChatId}
                   onSelect={() => setActiveChatId(chat.id)}
-                  onDelete={() => handleDelete(chat.id)}
+                  onDelete={() => setConfirmDeleteChatId(chat.id)}
                   onRename={(title) => renameChat(chat.id, title)}
                 />
               ))}
@@ -463,6 +465,20 @@ export function ChatInterface() {
           </div>
         </footer>
       </section>
+
+      <ConfirmModal
+        open={confirmDeleteChatId !== null}
+        onOpenChange={(open) => { if (!open) setConfirmDeleteChatId(null); }}
+        title="Eliminar conversacion"
+        description="Esta accion no se puede deshacer. Se eliminaran todos los mensajes de esta conversacion."
+        confirmLabel="Eliminar"
+        destructive
+        onConfirm={async () => {
+          if (!confirmDeleteChatId) return;
+          await handleDelete(confirmDeleteChatId);
+          setConfirmDeleteChatId(null);
+        }}
+      />
     </div>
   );
 }

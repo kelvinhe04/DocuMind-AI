@@ -64,7 +64,15 @@ async function handler(
   const ct = req.headers.get("content-type");
   if (ct) headers["content-type"] = ct;
 
-  const upstream = await fetch(url, { method: req.method, body, headers });
+  let upstream: Response;
+  try {
+    upstream = await fetch(url, { method: req.method, body, headers });
+  } catch {
+    return NextResponse.json(
+      { error: "backend_unavailable", detail: `No se pudo conectar con FastAPI en ${FASTAPI}` },
+      { status: 502 },
+    );
+  }
 
   const resHeaders: Record<string, string> = {
     "content-type": upstream.headers.get("content-type") ?? "application/json",

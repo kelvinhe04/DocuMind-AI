@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
-import { Brain, Home, Menu, Search } from "lucide-react";
+import { UserButton, useClerk } from "@clerk/nextjs";
+import { Brain, Home, LogOut, Menu, Search } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,9 +17,12 @@ import { clerkDarkAppearance } from "@/lib/clerkAppearance";
 import { cn } from "@/lib/utils";
 import { APP_NAV, APP_NAV_BOTTOM, PAGE_TITLES } from "./nav";
 import { PlanBadge } from "./PlanBadge";
+import { ConfirmModal } from "./ConfirmModal";
 
 export function Topbar() {
   const pathname = usePathname();
+  const { signOut } = useClerk();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const key = Object.keys(PAGE_TITLES).find((k) => pathname.startsWith(k));
   const title = key ? PAGE_TITLES[key] : "DocuMind";
   const allNav = [...APP_NAV, ...APP_NAV_BOTTOM];
@@ -91,8 +95,24 @@ export function Topbar() {
           <Home className="size-4" />
           <span className="hidden sm:block">Inicio</span>
         </Link>
+        <button
+          onClick={() => setShowLogoutConfirm(true)}
+          className="flex size-8 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-400 transition-colors hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+          title="Cerrar sesion"
+        >
+          <LogOut className="size-4" />
+        </button>
         <UserButton appearance={clerkDarkAppearance} />
       </div>
+
+      <ConfirmModal
+        open={showLogoutConfirm}
+        onOpenChange={setShowLogoutConfirm}
+        title="Cerrar sesion"
+        description="¿Seguro que quieres cerrar sesion? Tendras que volver a iniciar sesion para acceder a tu cuenta."
+        confirmLabel="Cerrar sesion"
+        onConfirm={() => signOut({ redirectUrl: "/" })}
+      />
     </header>
   );
 }

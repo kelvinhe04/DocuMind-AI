@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
 import { invalidateDocumentsCache, useDocuments } from "@/hooks/useDocuments";
 import type { Document } from "@/types/document";
+import { ConfirmModal } from "@/components/app/ConfirmModal";
 
 function SourceBadge({ type }: { type: Document["source_type"] }) {
   if (type === "pdf_text") {
@@ -109,6 +110,7 @@ export function DocumentList() {
   const [previewing, setPreviewing] = useState<Document | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<string[] | null>(null);
 
   const filtered = useMemo(
     () => documents.filter((doc) => doc.filename.toLowerCase().includes(filter.toLowerCase())),
@@ -224,7 +226,7 @@ export function DocumentList() {
                 <Button
                   size="sm"
                   disabled={deleting}
-                  onClick={() => deleteDocuments(Array.from(selected))}
+                  onClick={() => setPendingDelete(Array.from(selected))}
                   className="h-7 gap-1.5 bg-red-600 px-3 text-xs text-white hover:bg-red-700"
                 >
                   <Trash2 className="size-3.5" />
@@ -323,7 +325,7 @@ export function DocumentList() {
                           <Eye className="size-4" />
                         </button>
                         <button
-                          onClick={() => deleteDocuments([doc.id])}
+                          onClick={() => setPendingDelete([doc.id])}
                           disabled={deleting}
                           className="flex size-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-red-500/15 hover:text-red-400 disabled:opacity-40"
                           title="Eliminar"
@@ -341,6 +343,25 @@ export function DocumentList() {
       </div>
 
       {previewing && <PreviewModal doc={previewing} onClose={() => setPreviewing(null)} />}
+
+      <ConfirmModal
+        open={pendingDelete !== null}
+        onOpenChange={(open) => { if (!open) setPendingDelete(null); }}
+        title={pendingDelete?.length === 1 ? "Eliminar documento" : `Eliminar ${pendingDelete?.length ?? 0} documentos`}
+        description={
+          pendingDelete?.length === 1
+            ? "Esta acción no se puede deshacer. El documento y sus fragmentos serán eliminados permanentemente."
+            : `Esta acción no se puede deshacer. Los ${pendingDelete?.length ?? 0} documentos y sus fragmentos serán eliminados permanentemente.`
+        }
+        confirmLabel="Eliminar"
+        destructive
+        loading={deleting}
+        onConfirm={async () => {
+          if (!pendingDelete) return;
+          await deleteDocuments(pendingDelete);
+          setPendingDelete(null);
+        }}
+      />
     </>
   );
 }
