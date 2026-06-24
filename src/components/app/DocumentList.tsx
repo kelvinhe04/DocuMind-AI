@@ -9,13 +9,16 @@ import {
   RefreshCw,
   ScanText,
   Search,
+  Trash2,
   X,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useDocuments } from "@/hooks/useDocuments";
+import { api } from "@/lib/api";
+import { invalidateDocumentsCache, useDocuments } from "@/hooks/useDocuments";
 import type { Document } from "@/types/document";
 
 function SourceBadge({ type }: { type: Document["source_type"] }) {
@@ -104,6 +107,8 @@ export function DocumentList() {
   const { documents, loading, error, refresh } = useDocuments();
   const [filter, setFilter] = useState("");
   const [previewing, setPreviewing] = useState<Document | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
 
   const filtered = useMemo(
     () => documents.filter((doc) => doc.filename.toLowerCase().includes(filter.toLowerCase())),
@@ -112,6 +117,51 @@ export function DocumentList() {
   const ocrCount = documents.filter((doc) => doc.source_type !== "pdf_text").length;
   const totalChunks = documents.reduce((sum, doc) => sum + doc.chunks, 0);
   const totalPages = documents.reduce((sum, doc) => sum + doc.pages, 0);
+
+  const allFilteredSelected = filtered.length > 0 && filtered.every((d) => selected.has(d.id));
+
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  function toggleAll() {
+    if (allFilteredSelected) {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        filtered.forEach((d) => next.delete(d.id));
+        return next;
+      });
+    } else {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        filtered.forEach((d) => next.add(d.id));
+        return next;
+      });
+    }
+  }
+
+  async function deleteDocuments(ids: string[]) {
+    setDeleting(true);
+    try {
+      await Promise.all(ids.map((id) => api.delete(`/documents/${id}`)));
+      invalidateDocumentsCache();
+      setSelected((prev) => {
+        const next = new Set(prev);
+        ids.forEach((id) => next.delete(id));
+        return next;
+      });
+      toast.success(ids.length === 1 ? "Documento eliminado." : `${ids.length} documentos eliminados.`);
+      await refresh();
+    } catch {
+      toast.error("Error al eliminar. Intenta de nuevo.");
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   return (
     <>
@@ -156,6 +206,34 @@ export function DocumentList() {
             <span className="text-xs text-zinc-500">{ocrCount} con OCR</span>
           </div>
 
+          {/* Bulk delete bar */}
+          {selected.size > 0 && (
+            <div className="flex items-center justify-between border-b border-zinc-800/70 bg-violet-500/5 px-4 py-2">
+              <span className="text-sm text-zinc-300">
+                {selected.size} seleccionado{selected.size > 1 ? "s" : ""}
+              </span>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelected(new Set())}
+                  className="h-7 px-2 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  size="sm"
+                  disabled={deleting}
+                  onClick={() => deleteDocuments(Array.from(selected))}
+                  className="h-7 gap-1.5 bg-red-600 px-3 text-xs text-white hover:bg-red-700"
+                >
+                  <Trash2 className="size-3.5" />
+                  Eliminar {selected.size > 1 ? `(${selected.size})` : ""}
+                </Button>
+              </div>
+            </div>
+          )}
+
           {error && (
             <div className="m-4 rounded-lg border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-200">
               {error}
@@ -163,12 +241,19 @@ export function DocumentList() {
           )}
 
           <div className="overflow-x-auto">
-            <div className="min-w-[900px]">
-              <div className="grid grid-cols-[1fr_120px_80px_90px_110px_130px_48px] items-center gap-4 border-b border-zinc-800/70 bg-zinc-950/25 px-4 py-3">
+            <div className="min-w-[940px]">
+              {/* Header */}
+              <div className="grid grid-cols-[32px_1fr_120px_80px_90px_110px_130px_80px] items-center gap-4 border-b border-zinc-800/70 bg-zinc-950/25 px-4 py-3">
+                <input
+                  type="checkbox"
+                  checked={allFilteredSelected}
+                  onChange={toggleAll}
+                  className="size-4 cursor-pointer rounded border-zinc-600 accent-violet-500"
+                />
                 <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Archivo</span>
                 <span className="text-center text-xs font-semibold uppercase tracking-wider text-zinc-500">Tipo</span>
                 <span className="text-center text-xs font-semibold uppercase tracking-wider text-zinc-500">Pags.</span>
-                <span className="text-center text-xs font-semibold uppercase tracking-wider text-zinc-500">Chunks</span>
+                <span className="text-center text-xs font-semibold uppercase tracking-wider text-zinc-500">Fragmentos</span>
                 <span className="text-center text-xs font-semibold uppercase tracking-wider text-zinc-500">OCR</span>
                 <span className="text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">Subido</span>
                 <span />
@@ -177,14 +262,15 @@ export function DocumentList() {
               <div className="divide-y divide-zinc-800/60">
                 {loading ? (
                   Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="grid grid-cols-[1fr_120px_80px_90px_110px_130px_48px] items-center gap-4 px-4 py-3">
+                    <div key={i} className="grid grid-cols-[32px_1fr_120px_80px_90px_110px_130px_80px] items-center gap-4 px-4 py-3">
+                      <Skeleton className="size-4 rounded bg-zinc-800" />
                       <Skeleton className="h-4 w-52 bg-zinc-800" />
                       <Skeleton className="mx-auto h-6 w-20 rounded-md bg-zinc-800" />
                       <Skeleton className="mx-auto h-4 w-8 bg-zinc-800" />
                       <Skeleton className="mx-auto h-4 w-10 bg-zinc-800" />
                       <Skeleton className="mx-auto h-4 w-12 bg-zinc-800" />
                       <Skeleton className="ml-auto h-4 w-24 bg-zinc-800" />
-                      <Skeleton className="h-8 w-8 rounded-lg bg-zinc-800" />
+                      <Skeleton className="h-8 w-16 rounded-lg bg-zinc-800" />
                     </div>
                   ))
                 ) : filtered.length === 0 ? (
@@ -200,8 +286,17 @@ export function DocumentList() {
                   filtered.map((doc) => (
                     <div
                       key={doc.id}
-                      className="grid grid-cols-[1fr_120px_80px_90px_110px_130px_48px] items-center gap-4 px-4 py-3 transition-colors hover:bg-zinc-800/35"
+                      className={cn(
+                        "grid grid-cols-[32px_1fr_120px_80px_90px_110px_130px_80px] items-center gap-4 px-4 py-3 transition-colors hover:bg-zinc-800/35",
+                        selected.has(doc.id) && "bg-violet-500/5",
+                      )}
                     >
+                      <input
+                        type="checkbox"
+                        checked={selected.has(doc.id)}
+                        onChange={() => toggleOne(doc.id)}
+                        className="size-4 cursor-pointer rounded border-zinc-600 accent-violet-500"
+                      />
                       <div className="flex min-w-0 items-center gap-3">
                         <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-zinc-800">
                           <FileText className="size-4 text-zinc-400" />
@@ -219,13 +314,23 @@ export function DocumentList() {
                         )}
                       </span>
                       <span className="text-right text-xs text-zinc-500">{formatDate(doc.uploaded_at)}</span>
-                      <button
-                        onClick={() => setPreviewing(doc)}
-                        className="flex size-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-700 hover:text-violet-400"
-                        title="Vista previa"
-                      >
-                        <Eye className="size-4" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => setPreviewing(doc)}
+                          className="flex size-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-700 hover:text-violet-400"
+                          title="Vista previa"
+                        >
+                          <Eye className="size-4" />
+                        </button>
+                        <button
+                          onClick={() => deleteDocuments([doc.id])}
+                          disabled={deleting}
+                          className="flex size-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-red-500/15 hover:text-red-400 disabled:opacity-40"
+                          title="Eliminar"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}

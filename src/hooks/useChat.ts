@@ -112,7 +112,7 @@ export function useChat(chatId: string | null, onTitleUpdate?: (id: string, titl
           body: JSON.stringify({
             question,
             mode,
-            top_k: 5,
+            top_k: 8,
             filter_doc: filterDoc ?? null,
             chat_id: targetChatId ?? null,
           }),

@@ -46,9 +46,6 @@ export function Footer() {
               El cerebro digital de tu empresa. Búsqueda semántica y chat con citas exactas sobre
               tus documentos.
             </p>
-            <p className="mt-4 text-xs text-slate-600">
-              Proyecto UTP · Grupo 1GS241 · 2026
-            </p>
           </div>
 
           {cols.map((col) => (
@@ -73,12 +70,9 @@ export function Footer() {
         </div>
 
         <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-slate-600">
-            © 2026 DocuMind AI · He · Barrera · Mosquera · Athanasidis
-          </p>
-          <p className="text-xs text-slate-700">
-            Construido con Next.js · FastAPI · Groq · ChromaDB
-          </p>
+            <p className="text-xs text-slate-600">
+              © 2026 DocuMind AI
+            </p>
         </div>
       </div>
     </footer>

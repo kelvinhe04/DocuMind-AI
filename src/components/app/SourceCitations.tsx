@@ -40,7 +40,7 @@ export function SourceCitations({ sources }: Props) {
               <span className="max-w-[160px] truncate">{source.filename}</span>
               <span className="text-zinc-600">p.{source.page}</span>
               <Badge variant="outline" className="border-zinc-700 px-1 py-0 text-[10px] text-zinc-400">
-                {(source.score * 100).toFixed(0)}%
+                {Math.min(100, Math.abs(source.score * 100)).toFixed(0)}%
               </Badge>
             </button>
           ))}
@@ -78,7 +78,7 @@ export function SourceCitations({ sources }: Props) {
           </div>
           <div className="flex items-center gap-2 text-xs text-zinc-500">
             <Badge variant="secondary">
-              Score: {selectedSource ? (selectedSource.score * 100).toFixed(1) : 0}%
+              Score: {selectedSource ? Math.min(100, Math.abs(selectedSource.score * 100)).toFixed(1) : 0}%
             </Badge>
             {selectedSource?.source_type && <Badge variant="outline">{selectedSource.source_type}</Badge>}
           </div>

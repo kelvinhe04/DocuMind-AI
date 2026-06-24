@@ -297,7 +297,7 @@ function BillingContent() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-white">Metodo de pago</h3>
-              <p className="text-sm text-zinc-300">**** **** **** 4242 - Visa (modo test)</p>
+              <p className="text-sm text-zinc-300">**** **** **** 4242 - Visa</p>
               <p className="text-xs text-zinc-500">Proxima factura: 21 de julio de 2026</p>
             </div>
           </div>

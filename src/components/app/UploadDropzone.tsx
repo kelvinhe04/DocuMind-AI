@@ -7,6 +7,8 @@ import { CheckCircle2, FileText, Loader2, ScanText, Upload, X, XCircle } from "l
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { api } from "@/lib/api";
+import { invalidateDocumentsCache } from "@/hooks/useDocuments";
 import type { UploadResult } from "@/types/document";
 import { UpgradeDialog } from "./UpgradeDialog";
 
@@ -84,8 +86,22 @@ export function UploadDropzone({ onSuccess }: Props) {
   const updateEntry = useCallback((id: string, patch: Partial<FileEntry>) =>
     setEntries((prev) => prev.map((entry) => entry.id === id ? { ...entry, ...patch } : entry)), []);
 
-  const removeEntry = (id: string) =>
-    setEntries((prev) => prev.filter((entry) => entry.id !== id));
+  const removeEntry = useCallback((id: string) =>
+    setEntries((prev) => prev.filter((entry) => entry.id !== id)), []);
+
+  const handleRemove = useCallback(async (entry: FileEntry) => {
+    if (entry.step === "done" && entry.result?.document_id) {
+      try {
+        await api.delete(`/documents/${entry.result.document_id}`);
+        invalidateDocumentsCache();
+        toast.success(`"${entry.result.filename}" eliminado.`);
+      } catch {
+        toast.error("No se pudo eliminar del servidor.");
+        return;
+      }
+    }
+    removeEntry(entry.id);
+  }, [removeEntry]);
 
   const uploadFile = useCallback(async (entry: FileEntry) => {
     const { id, file } = entry;
@@ -125,6 +141,7 @@ export function UploadDropzone({ onSuccess }: Props) {
 
       const data: UploadResult = await res.json();
       updateEntry(id, { step: "done", result: data });
+      invalidateDocumentsCache();
       toast.success(`"${data.filename}" indexado correctamente.`);
       onSuccess?.();
     } catch (err: unknown) {
@@ -236,7 +253,7 @@ export function UploadDropzone({ onSuccess }: Props) {
                         <p className="truncate text-sm font-medium text-red-300">{entry.file.name}</p>
                         <p className="text-xs text-zinc-500">{entry.error ?? "Error al procesar"}</p>
                       </div>
-                      <button onClick={() => removeEntry(entry.id)} className="shrink-0 text-zinc-500 transition-colors hover:text-zinc-300">
+                      <button onClick={() => handleRemove(entry)} className="shrink-0 text-zinc-500 transition-colors hover:text-zinc-300">
                         <X className="size-4" />
                       </button>
                     </div>
@@ -271,7 +288,7 @@ export function UploadDropzone({ onSuccess }: Props) {
                         <p className="text-xs text-zinc-500">{STEP_LABELS[entry.step]}</p>
                       </div>
                       {!isProcessing && (
-                        <button onClick={() => removeEntry(entry.id)} className="shrink-0 text-zinc-500 transition-colors hover:text-zinc-300">
+                        <button onClick={() => handleRemove(entry)} className="shrink-0 text-zinc-500 transition-colors hover:text-zinc-300">
                           <X className="size-4" />
                         </button>
                       )}

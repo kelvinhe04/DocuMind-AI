@@ -27,6 +27,11 @@ async function loadDocuments(force = false) {
   return documentsRequest;
 }
 
+export function invalidateDocumentsCache() {
+  documentsCache = null;
+  documentsRequest = null;
+}
+
 export function useDocuments() {
   const { isLoaded, isSignedIn } = useUser();
   const [documents, setDocuments] = useState<Document[]>(documentsCache ?? []);
@@ -34,7 +39,7 @@ export function useDocuments() {
   const [error, setError] = useState<string | null>(null);
 
   const fetch = useCallback(
-    async (force = false) => {
+    async (force = false, silent = false) => {
       if (!isLoaded) return;
 
       if (!isSignedIn) {
@@ -43,21 +48,22 @@ export function useDocuments() {
         return;
       }
 
-      setLoading(true);
+      if (!silent) setLoading(true);
       setError(null);
       try {
         setDocuments(await loadDocuments(force));
       } catch {
         setError("No se pudieron cargar los documentos.");
       } finally {
-        setLoading(false);
+        if (!silent) setLoading(false);
       }
     },
     [isLoaded, isSignedIn],
   );
 
   useEffect(() => {
-    fetch(false);
+    // Always force-refresh on mount; silent if we already have cached data
+    fetch(true, !!documentsCache);
   }, [fetch]);
 
   const refresh = useCallback(() => fetch(true), [fetch]);

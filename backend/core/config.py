@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     # Chunking / RAG
     chunk_size: int = 1000
     chunk_overlap: int = 200
-    top_k_retrieval: int = 5
+    top_k_retrieval: int = 8
     max_tokens_response: int = 1024
     temperature: float = 0.1
 

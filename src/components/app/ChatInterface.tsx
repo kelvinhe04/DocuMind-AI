@@ -429,7 +429,7 @@ export function ChatInterface() {
           )}
 
           {!historyLoading && (messages.length > 0 || loading) && (
-            <div className="w-full space-y-6 py-6">
+            <div className="w-full space-y-10 py-6">
               {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
               {loading && <TypingIndicator />}
               <div ref={bottomRef} />

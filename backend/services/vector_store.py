@@ -73,6 +73,37 @@ def query(text: str, k: int, filter_doc: Optional[str] = None,
     return results
 
 
+def get_all_chunks(user_id: Optional[str] = None,
+                   filter_doc: Optional[str] = None) -> list[dict]:
+    """Return all chunks (text + metadata) for BM25 indexing."""
+    try:
+        where: Optional[dict] = None
+        if user_id and filter_doc:
+            where = {"$and": [{"user_id": {"$in": [user_id, ""]}}, {"filename": filter_doc}]}
+        elif user_id:
+            where = {"user_id": {"$in": [user_id, ""]}}
+        elif filter_doc:
+            where = {"filename": filter_doc}
+
+        res = _collection.get(where=where) if where else _collection.get()
+        ids = res.get("ids", [])
+        docs = res.get("documents", [])
+        metas = res.get("metadatas", []) or [{}] * len(ids)
+        return [
+            {
+                "_id": id_,
+                "text": doc,
+                "filename": meta.get("filename", "?"),
+                "page": int(meta.get("page", 0)),
+                "source_type": meta.get("source_type", "pdf_text"),
+            }
+            for id_, doc, meta in zip(ids, docs, metas)
+            if doc
+        ]
+    except Exception:
+        return []
+
+
 def count_chunks(user_id: Optional[str] = None) -> int:
     if not user_id:
         return _collection.count()

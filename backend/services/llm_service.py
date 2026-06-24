@@ -36,7 +36,11 @@ def _extractive(chunks: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def answer(question: str, chunks: list[dict]) -> tuple[str, bool]:
+def answer(
+    question: str,
+    chunks: list[dict],
+    history: list[dict] | None = None,
+) -> tuple[str, bool]:
     """Devuelve (texto, used_llm). Sin Groq o ante error -> extractivo."""
     if not chunks:
         return "No encontré esa información en los documentos cargados.", False
@@ -47,18 +51,24 @@ def answer(question: str, chunks: list[dict]) -> tuple[str, bool]:
     try:
         from groq import Groq
 
+        # Build message list: system → history turns → current question with context
+        messages: list[dict] = [{"role": "system", "content": SYSTEM_PROMPT}]
+
+        if history:
+            messages.extend(history)
+
+        messages.append({
+            "role": "user",
+            "content": f"Contexto documental:\n{_format_context(chunks)}\n\nPregunta: {question}",
+        })
+
         client = Groq(api_key=settings.groq_api_key)
         completion = client.chat.completions.create(
             model=settings.groq_model,
             temperature=settings.temperature,
             max_tokens=settings.max_tokens_response,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content":
-                    f"Contexto:\n{_format_context(chunks)}\n\nPregunta: {question}"},
-            ],
+            messages=messages,
         )
         return completion.choices[0].message.content, True
     except Exception:
-        # Cualquier fallo (sin red, rate limit, key inválida) -> extractivo
         return _extractive(chunks), False

@@ -11,6 +11,7 @@ python-multipart
 # RAG / Vector
 langchain-text-splitters
 chromadb
+rank-bm25
 
 # LLM
 groq

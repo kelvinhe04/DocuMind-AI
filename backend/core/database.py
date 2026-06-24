@@ -322,6 +322,16 @@ def add_message(chat_id: str, role: str, content: str,
     }
 
 
+def get_recent_messages(chat_id: str, limit: int = 6) -> list[dict]:
+    """Return last `limit` messages (role + content only) for LLM conversation context."""
+    with _conn() as c:
+        rows = c.execute(
+            "SELECT role, content FROM messages WHERE chat_id = ? ORDER BY id DESC LIMIT ?",
+            (chat_id, limit),
+        ).fetchall()
+    return [{"role": r["role"], "content": r["content"]} for r in reversed(rows)]
+
+
 def list_messages(chat_id: str) -> list[dict]:
     with _conn() as c:
         rows = c.execute(

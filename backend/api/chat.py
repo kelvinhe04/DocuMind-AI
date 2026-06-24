@@ -20,7 +20,8 @@ def chat(req: ChatRequest, x_user_id: str = Header(default="")):
     if req.mode == "search":
         answer, used_llm = None, False
     else:
-        answer, used_llm = llm_service.answer(req.question, chunks)
+        history = database.get_recent_messages(req.chat_id, limit=6) if req.chat_id else []
+        answer, used_llm = llm_service.answer(req.question, chunks, history)
 
     latency_ms = int((time.perf_counter() - start) * 1000)
     database.insert_query(req.question, req.mode, used_llm, latency_ms, x_user_id)
