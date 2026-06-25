@@ -154,7 +154,7 @@ export function Pricing() {
                   </div>
                   {annual && plan.monthly > 0 && (
                     <p className="text-xs text-emerald-400 mt-1">
-                      ${plan.monthly * 12 * disc}/año — ahorras ${Math.round(plan.monthly * 12 * 0.17)}
+                      ${Math.round(plan.monthly * 12 * disc)}/año — ahorras ${plan.monthly * 12 - Math.round(plan.monthly * 12 * disc)}
                     </p>
                   )}
                   <p className="mt-2 text-xs text-slate-500">{plan.desc}</p>
